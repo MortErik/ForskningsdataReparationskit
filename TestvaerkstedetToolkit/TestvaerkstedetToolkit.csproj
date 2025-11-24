@@ -61,8 +61,11 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\AnalysisResult.cs" />
     <Compile Include="Models\ForeignKeyInfo.cs" />
     <Compile Include="Models\PrimaryKeyInfo.cs" />
+    <Compile Include="Models\SplitConfiguration.cs" />
+    <Compile Include="Models\SplitResult.cs" />
     <Compile Include="Models\SplitTable.cs" />
     <Compile Include="Models\TableIndexColumn.cs" />
     <Compile Include="Models\TableIndexEntry.cs" />
@@ -73,8 +76,15 @@
     <Compile Include="ScalableXmlFKRepair.cs" />
     <Compile Include="Services\AutoIDManager.cs" />
     <Compile Include="Services\CompositePKSplitAlgorithm.cs" />
+    <Compile Include="Services\PrimaryKeyAnalysisService.cs" />
+    <Compile Include="Services\SplitConfigurationService.cs" />
+    <Compile Include="Services\TableIndexService.cs" />
+    <Compile Include="Services\XMLFileGenerationService.cs" />
+    <Compile Include="Services\XMLSplitService.cs" />
     <Compile Include="Utilities\DataTypeMapper.cs" />
+    <Compile Include="Utilities\FileSystemHelper.cs" />
     <Compile Include="Utilities\SplitGenerator.cs" />
+    <Compile Include="Utilities\SplitLogger.cs" />
     <Compile Include="Utilities\TableIndexParser.cs" />
     <Compile Include="WelcomeForm.cs">
       <SubType>Form</SubType>
