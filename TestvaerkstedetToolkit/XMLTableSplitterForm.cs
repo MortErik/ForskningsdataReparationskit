@@ -315,13 +315,17 @@ namespace TestvaerkstedetToolkit
 
             try
             {
+                var splitConfigService = new SplitConfigurationService();
+                var pkInfo = compositePKSelector.GetPrimaryKeyInfo();
+                var pkColumns = pkInfo.GetAllPrimaryKeyColumns();
+
                 resultTables.Clear();
                 List<int> splitPoints;
 
-                // FIX: Tjek om feltet reelt er tomt (inklusiv placeholder)
+                // REFACTORED: Brug SplitConfigurationService
                 if (IsSplitPointsEmpty())
                 {
-                    splitPoints = CalculateAutoSplitPoints();
+                    splitPoints = splitConfigService.CalculateAutoSplitPoints(currentTableEntry, pkColumns);
 
                     // Fjern placeholder og vis beregnede split punkter
                     HidePlaceholder();
@@ -334,17 +338,21 @@ namespace TestvaerkstedetToolkit
                 }
                 else
                 {
-                    splitPoints = ParseSplitPoints(txtSplitPoints.Text);
+                    splitPoints = splitConfigService.ParseSplitPoints(txtSplitPoints.Text);
                 }
 
-                string validation = ValidateTableIndexAwareSplitPoints(splitPoints);
+                string validation = splitConfigService.ValidateTableIndexAwareSplitPoints(
+                    splitPoints, currentTableEntry, allColumns, pkColumns);
+
                 if (!string.IsNullOrEmpty(validation))
                 {
                     MessageBox.Show($"Split punkter er ikke gyldige:\n{validation}");
                     return;
                 }
 
-                GenerateTableIndexAwareSplitTables(splitPoints);
+                resultTables = splitConfigService.GenerateTableIndexAwareSplitTables(
+                    splitPoints, currentTableEntry, allColumns, pkInfo);
+
                 ShowTableIndexSplitPreview();
                 btnExecuteSplit.Enabled = resultTables.Count >= 2;
             }
@@ -669,6 +677,7 @@ namespace TestvaerkstedetToolkit
 
         /// <summary>
         /// PK Analyse med composite support - analysér combined unikhed
+        /// REFACTORED: Bruger nu PrimaryKeyAnalysisService
         /// </summary>
         private async void btnAnalyzePK_Click(object sender, EventArgs e)
         {
@@ -700,17 +709,19 @@ namespace TestvaerkstedetToolkit
                 progressBar.Visible = true;
                 progressBar.Style = ProgressBarStyle.Marquee;
 
+                var pkAnalysisService = new PrimaryKeyAnalysisService();
                 var pkInfo = compositePKSelector.GetPrimaryKeyInfo();
                 var pkColumns = pkInfo.GetAllPrimaryKeyColumns();
 
                 lblPreviewInfo.Text = $"Analyserer {(pkInfo.IsComposite ? "composite" : "enkelt")} primærnøgle unikhed...";
 
                 var (uniqueCount, totalCount, nullCount) = await Task.Run(() =>
-                    AnalyzeCompositePrimaryKeyUniqueness(pkColumns));
+                    pkAnalysisService.AnalyzeCompositePrimaryKeyUniqueness(
+                        currentXMLPath, pkColumns, currentTableEntry, pkInfo));
 
                 progressBar.Visible = false;
 
-                string message = BuildPKAnalysisMessage(pkColumns, uniqueCount, totalCount, nullCount);
+                string message = pkAnalysisService.BuildPKAnalysisMessage(pkColumns, uniqueCount, totalCount, nullCount);
                 ShowPKAnalysisResult(message, uniqueCount, totalCount, nullCount);
             }
             catch (Exception ex)
@@ -1027,34 +1038,41 @@ namespace TestvaerkstedetToolkit
 
         /// <summary>
         /// Kør split operation med fuld logging og fil generering
+        /// Bruger nu XMLSplitService orchestrator
         /// </summary>
         private async void ExecuteSplitOperation(UIDataContainer uiData)
         {
             try
             {
-                var progress = new Progress<(int value, string message)>(state =>
+                var splitService = new XMLSplitService();
+                var logger = new Utilities.SplitLogger();
+                var progress = new FormProgressReporter(progressBar, lblPreviewInfo);
+
+                var result = await Task.Run(() => splitService.ExecuteSplit(uiData, progress, logger));
+
+                if (result.Success)
                 {
-                    progressBar.Value = Math.Min(state.value, 100);
-                    lblPreviewInfo.Text = state.message;
-                });
+                    var openResult = MessageBox.Show(
+                        $"Split fuldført!\n\n" +
+                        $"Oprettet {result.TablesGenerated} nye tabeller i:\n{result.OutputDirectory}\n\n" +
+                        $"Filer genereret:\n" +
+                        $"- {result.TablesGenerated} XML filer\n" +
+                        $"- tableIndex_updated.xml med cross-references\n" +
+                        $"- Detaljeret operation log\n\n" +
+                        $"Åbn output mappe?",
+                        "Split Fuldført",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Information);
 
-                string outputDirectory = await Task.Run(() => ExecuteTableIndexSplit(uiData, progress));
-
-                var openResult = MessageBox.Show(
-                    $"Split fuldført!\n\n" +
-                    $"Oprettet {uiData.Tables.Count} nye tabeller i:\n{outputDirectory}\n\n" +
-                    $"Filer genereret:\n" +
-                    $"- {uiData.Tables.Count} XML filer\n" +
-                    $"- tableIndex_updated.xml med cross-references\n" +
-                    $"- Detaljeret operation log\n\n" +
-                    $"Åbn output mappe?",
-                    "Split Fuldført",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Information);
-
-                if (openResult == DialogResult.Yes)
+                    if (openResult == DialogResult.Yes)
+                    {
+                        OpenDirectorySafely(result.OutputDirectory);
+                    }
+                }
+                else
                 {
-                    OpenDirectorySafely(outputDirectory);
+                    MessageBox.Show($"Fejl under split operation:\n{result.ErrorMessage}",
+                                   "Operation Fejlede", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
@@ -2696,7 +2714,7 @@ namespace TestvaerkstedetToolkit
 
             container.AllColumns = ConvertTableIndexColumnsToXMLColumns(currentTableEntry.Columns);
 
-            Services.AutoIDManager.EnsureAutoIDInAllColumns(container);
+            AutoIDManager.EnsureAutoIDInAllColumns(container);
 
             if (resultTables != null && resultTables.Count > 0)
             {
@@ -3014,7 +3032,7 @@ namespace TestvaerkstedetToolkit
                 }
 
                 double newVersion = maxVersion + 0.1;
-                return $"v{newVersion:F1}";
+                return $"v{newVersion.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)}";
             }
             catch
             {
@@ -3123,6 +3141,40 @@ namespace TestvaerkstedetToolkit
                 logContent.AppendLine("==============================================================================");
 
                 File.WriteAllText(logPath, logContent.ToString(), Encoding.UTF8);
+            }
+        }
+
+        /// <summary>
+        /// Progress reporter adapter for service integration
+        /// Forbinder XMLSplitService progress callbacks med UI controls
+        /// </summary>
+        private class FormProgressReporter : IProgressReporter
+        {
+            private readonly ProgressBar progressBar;
+            private readonly Label statusLabel;
+
+            public FormProgressReporter(ProgressBar bar, Label label)
+            {
+                progressBar = bar;
+                statusLabel = label;
+            }
+
+            public void Report(int percentage, string message)
+            {
+                // Thread-safe UI update
+                if (progressBar.InvokeRequired)
+                {
+                    progressBar.Invoke((Action)(() =>
+                    {
+                        progressBar.Value = Math.Min(percentage, 100);
+                        statusLabel.Text = message;
+                    }));
+                }
+                else
+                {
+                    progressBar.Value = Math.Min(percentage, 100);
+                    statusLabel.Text = message;
+                }
             }
         }
 

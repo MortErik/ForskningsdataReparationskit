@@ -10,6 +10,26 @@ using TestvaerkstedetToolkit.Models;
 namespace TestvaerkstedetToolkit.Services
 {
     /// <summary>
+    /// Interface for progress reporting
+    /// </summary>
+    public interface IProgressReporter
+    {
+        void Report(int percentage, string message);
+    }
+
+    /// <summary>
+    /// Interface for logging operations
+    /// </summary>
+
+    public interface ISplitLogger
+    {
+        void LogInfo(string message);
+        void LogWarning(string message);
+        void LogError(string message);
+        void SaveToFile(string logPath);
+    }
+
+    /// <summary>
     /// Orchestrator service for XML table splitting operations
     /// Koordinerer split execution workflow mellem services og håndterer file system operationer
     /// </summary>
@@ -37,25 +57,6 @@ namespace TestvaerkstedetToolkit.Services
             public int TablesGenerated { get; set; }
             public int TotalRows { get; set; }
             public List<string> GeneratedFiles { get; set; } = new List<string>();
-        }
-
-        /// <summary>
-        /// Interface for progress reporting
-        /// </summary>
-        public interface IProgressReporter
-        {
-            void Report(int percentage, string message);
-        }
-
-        /// <summary>
-        /// Interface for logging operations
-        /// </summary>
-        public interface ISplitLogger
-        {
-            void LogInfo(string message);
-            void LogWarning(string message);
-            void LogError(string message);
-            void SaveToFile(string logPath);
         }
 
         /// <summary>
@@ -145,12 +146,30 @@ namespace TestvaerkstedetToolkit.Services
 
                 // STEP 5: Opret final directory og flyt alt
                 Directory.CreateDirectory(Path.GetDirectoryName(finalOutputDirectory));
+
+                // Hvis destination eksisterer, find næste ledige version
+                int retryCount = 0;
+                while (Directory.Exists(finalOutputDirectory) && retryCount < 10)
+                {
+                    logger?.LogWarning($"Destination already exists: {finalOutputDirectory}");
+                    logger?.LogInfo("Finding next available version number...");
+
+                    // Increment version
+                    versionNumber = IncrementVersionNumber(versionNumber);
+                    splitFolderName = $"split_{uiData.OriginalTableName}_table{originalTableNumber}_{versionNumber}";
+                    finalOutputDirectory = Path.Combine(parentFolder, splitFolderName);
+
+                    logger?.LogInfo($"Trying new version: {versionNumber}");
+                    retryCount++;
+                }
+
+                if (Directory.Exists(finalOutputDirectory))
+                {
+                    throw new InvalidOperationException("Could not find available version number after 10 attempts");
+                }
+
                 Directory.Move(tempDirectory, finalOutputDirectory);
-                tempDirectory = null; // Mark som flyttet
-
-                logger?.LogInfo($"Filer flyttet til final destination: {finalOutputDirectory}");
-
-                progress?.Report(95, "Afslutter...");
+                tempDirectory = null;
 
                 // STEP 6: Populate result
                 result.Success = true;
@@ -185,6 +204,19 @@ namespace TestvaerkstedetToolkit.Services
                 result.ErrorMessage = ex.Message;
                 return result;
             }
+        }
+
+        private string IncrementVersionNumber(string currentVersion)
+        {
+            // Parse "v1.0" → 1.0
+            var versionStr = currentVersion.Replace("v", "");
+            if (double.TryParse(versionStr, System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture, out double version))
+            {
+                version += 0.1;
+                return $"v{version.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)}";
+            }
+            return "v1.0";
         }
 
         /// <summary>
@@ -315,7 +347,12 @@ namespace TestvaerkstedetToolkit.Services
                     return "v1.0";
 
                 var existingFolders = Directory.GetDirectories(parentFolder)
-                    .Where(dir => Path.GetFileName(dir).StartsWith($"split_{tableName}_v"))
+                    .Where(dir =>
+                    {
+                        var name = Path.GetFileName(dir);
+                        // Match: split_{tableName}_table{nummer}_v{version}
+                        return Regex.IsMatch(name, $@"^split_{Regex.Escape(tableName)}_table\d+_v[\d\.]+$");
+                    })
                     .ToList();
 
                 if (existingFolders.Count == 0)
@@ -340,7 +377,7 @@ namespace TestvaerkstedetToolkit.Services
                 }
 
                 double newVersion = maxVersion + 0.1;
-                return $"v{newVersion:F1}";
+                return $"v{newVersion.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)}";  // Bruger punktum
             }
             catch
             {
