@@ -437,14 +437,14 @@ namespace TestvaerkstedetToolkit
 
                 lblPreviewInfo.Text = $"Analyserer {(pkInfo.IsComposite ? "composite" : "enkelt")} primærnøgle unikhed...";
 
-                var (uniqueCount, totalCount, nullCount) = await Task.Run(() =>
+                var analysisResult = await Task.Run(() =>
                     pkAnalysisService.AnalyzeCompositePrimaryKeyUniqueness(
                         currentXMLPath, pkColumns, currentTableEntry, pkInfo));
 
                 progressBar.Visible = false;
 
-                string message = pkAnalysisService.BuildPKAnalysisMessage(pkColumns, uniqueCount, totalCount, nullCount);
-                ShowPKAnalysisResult(message, uniqueCount, totalCount, nullCount);
+                string message = pkAnalysisService.BuildPKAnalysisMessage(pkColumns, analysisResult.UniqueCount, analysisResult.TotalCount, analysisResult.NullCount);
+                ShowPKAnalysisResult(message, analysisResult.UniqueCount, analysisResult.TotalCount, analysisResult.NullCount);
             }
             catch (Exception ex)
             {
@@ -561,7 +561,7 @@ namespace TestvaerkstedetToolkit
             try
             {
                 var splitService = new XMLSplitService();
-                var logger = new Utilities.SplitLogger();
+                var logger = new SplitLogger();
                 var progress = new FormProgressReporter(progressBar, lblPreviewInfo);
 
                 var result = await Task.Run(() => splitService.ExecuteSplit(uiData, progress, logger));

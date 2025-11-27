@@ -143,10 +143,10 @@ namespace TestvaerkstedetToolkit.Services
         /// Generer split tables med TableIndex metadata
         /// </summary>
         public List<SplitTable> GenerateTableIndexAwareSplitTables(
-    List<int> splitPoints,
-    TableIndexEntry tableEntry,
-    List<XMLColumn> allColumns,
-    PrimaryKeyInfo pkInfo)
+            List<int> splitPoints,
+            TableIndexEntry tableEntry,
+            List<XMLColumn> allColumns,
+            PrimaryKeyInfo pkInfo)
         {
             var resultTables = new List<SplitTable>();
             if (tableEntry == null) return resultTables;

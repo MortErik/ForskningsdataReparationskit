@@ -643,7 +643,7 @@ namespace TestvaerkstedetToolkit
         }
 
         /// <summary>
-        /// Generer dummy CSV records med auto-detection af dato/tid kolonner - MEMORY OPTIMIZED
+        /// Generer dummy CSV records med auto-detection af dato/tid kolonner
         /// </summary>
         private async Task GenerateDummyRecordsAsync(string outputPath)
         {

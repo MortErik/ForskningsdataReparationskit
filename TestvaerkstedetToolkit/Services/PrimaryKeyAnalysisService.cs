@@ -16,7 +16,7 @@ namespace TestvaerkstedetToolkit.Services
         /// <summary>
         /// Analysér combined unikhed for composite eller single PK
         /// </summary>
-        public (int uniqueCount, int totalCount, int nullCount) AnalyzeCompositePrimaryKeyUniqueness(
+        public AnalysisResult AnalyzeCompositePrimaryKeyUniqueness(
             string xmlPath,
             List<string> pkColumnNames,
             TableIndexEntry tableEntry,
@@ -202,7 +202,12 @@ namespace TestvaerkstedetToolkit.Services
             System.Diagnostics.Debug.WriteLine($"\n=== PK ANALYSE SLUT ===");
             System.Diagnostics.Debug.WriteLine($"Total: {totalCount:N0}, Unique: {uniqueValues.Count:N0}, Null: {nullCount:N0}");
 
-            return (uniqueValues.Count, totalCount, nullCount);
+            return new AnalysisResult
+            {
+                UniqueCount = uniqueValues.Count,
+                TotalCount = totalCount,
+                NullCount = nullCount
+            };
         }
 
         /// <summary>
