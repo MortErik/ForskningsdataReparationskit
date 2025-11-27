@@ -58,12 +58,6 @@
     <Compile Include="CSVFKRepairForm.Designer.cs">
       <DependentUpon>CSVFKRepairForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Models\AnalysisResult.cs" />
     <Compile Include="Models\ForeignKeyInfo.cs" />
     <Compile Include="Models\PrimaryKeyInfo.cs" />
