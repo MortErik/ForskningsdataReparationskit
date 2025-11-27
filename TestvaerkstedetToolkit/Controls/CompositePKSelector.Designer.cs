@@ -90,7 +90,7 @@
             // 
             this.lblPreviewValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.lblPreviewValue.ForeColor = System.Drawing.Color.DarkRed;
-            this.lblPreviewValue.Location = new System.Drawing.Point(170, 170);
+            this.lblPreviewValue.Location = new System.Drawing.Point(166, 170);
             this.lblPreviewValue.Name = "lblPreviewValue";
             this.lblPreviewValue.Size = new System.Drawing.Size(540, 35);
             this.lblPreviewValue.TabIndex = 5;
@@ -110,7 +110,7 @@
             // 
             this.lblCapacityValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.lblCapacityValue.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lblCapacityValue.Location = new System.Drawing.Point(280, 205);
+            this.lblCapacityValue.Location = new System.Drawing.Point(200, 205);
             this.lblCapacityValue.Name = "lblCapacityValue";
             this.lblCapacityValue.Size = new System.Drawing.Size(430, 75);
             this.lblCapacityValue.TabIndex = 7;

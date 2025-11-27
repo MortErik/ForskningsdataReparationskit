@@ -184,9 +184,13 @@ namespace TestvaerkstedetToolkit.Controls
                 return;
             }
 
-            // Beregn kapacitet med detaljeret forklaring
+            // Beregn kapacitet
             int totalPKColumns = pkColumns.Count;
             int availableDataColumns = Math.Max(0, 950 - totalPKColumns);
+
+            // Tjek faktisk tabel størrelse
+            int totalTableColumns = _currentTableEntry?.Columns?.Count ?? 0;
+            bool tableRequiresSplit = totalTableColumns > 1000;
 
             // Update preview baseret på PK type
             if (pkColumns.Count == 1)
@@ -194,20 +198,34 @@ namespace TestvaerkstedetToolkit.Controls
                 lblPreviewValue.Text = $"Enkelt primærnøgle: {pkColumns[0]}";
                 lblPreviewValue.ForeColor = Color.DarkGreen;
 
-                lblCapacityValue.Text = $"Split kapacitet: {availableDataColumns} data-kolonner per tabel. " +
-                                       $"Primærnøglen ({pkColumns[0]}) duplikeres til alle split tabeller, " +
-                                       $"så {availableDataColumns} kolonner tilbage til data. " +
-                                       $"Beregning: 950 - 1 PK = {availableDataColumns} data-kolonner.";
-                lblCapacityValue.ForeColor = Color.DarkGreen;
+                if (tableRequiresSplit || totalTableColumns == 0)
+                {
+                    lblCapacityValue.Text = $"Split kapacitet: {availableDataColumns} data-kolonner per tabel. " +
+                                           $"Primærnøglen ({pkColumns[0]}) duplikeres til alle split tabeller.";
+                    lblCapacityValue.ForeColor = Color.DarkGreen;
+                }
+                else
+                {
+                    lblCapacityValue.Text = $"Tabel har {totalTableColumns} kolonner total. " +
+                                           $"Primærnøglen ({pkColumns[0]}) duplikeres til alle split tabeller.";
+                    lblCapacityValue.ForeColor = Color.DarkGreen;
+                }
             }
             else
             {
                 lblPreviewValue.Text = $"Sammensat primærnøgle: {string.Join(", ", pkColumns)}";
                 lblPreviewValue.ForeColor = Color.DarkBlue;
 
-                lblCapacityValue.Text = $"Split kapacitet: {availableDataColumns} data-kolonner per tabel. " +
-                                       $"Alle {totalPKColumns} primærnøgle komponenter duplikeres til hver split tabel. " +
-                                       $"Beregning: 950 - {totalPKColumns} PK komponenter = {availableDataColumns} data-kolonner.";
+                if (tableRequiresSplit || totalTableColumns == 0)
+                {
+                    lblCapacityValue.Text = $"Split kapacitet: {availableDataColumns} data-kolonner per tabel. " +
+                                           $"Alle {totalPKColumns} primærnøgle komponenter duplikeres til hver split tabel.";
+                }
+                else
+                {
+                    lblCapacityValue.Text = $"Tabel har {totalTableColumns} kolonner total. " +
+                                           $"Alle {totalPKColumns} primærnøgle komponenter duplikeres til hver split tabel.";
+                }
 
                 // Farve baseret på tilgængelig kapacitet
                 if (availableDataColumns > 800)
