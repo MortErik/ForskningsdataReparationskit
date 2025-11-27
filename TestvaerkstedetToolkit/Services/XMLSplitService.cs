@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using TestvaerkstedetToolkit.Models;
+using TestvaerkstedetToolkit.Utilities;
 
 namespace TestvaerkstedetToolkit.Services
 {
@@ -69,7 +70,7 @@ namespace TestvaerkstedetToolkit.Services
                 // Parse original table nummer
                 int originalTableNumber = int.Parse(Regex.Match(uiData.OriginalTableEntry.Folder, @"table(\d+)").Groups[1].Value);
 
-                string versionNumber = GetNextVersionNumber(parentFolder, uiData.OriginalTableName);
+                string versionNumber = FileSystemHelper.GetNextVersionNumber(parentFolder, uiData.OriginalTableName);
                 string splitFolderName = $"split_{uiData.OriginalTableName}_table{originalTableNumber}_{versionNumber}";
 
                 // TEMP folder for generation
@@ -589,55 +590,6 @@ namespace TestvaerkstedetToolkit.Services
             log.AppendLine("═══════════════════════════════════════════════════════════════════════════");
 
             File.WriteAllText(logPath, log.ToString(), Encoding.UTF8);
-        }
-
-        /// <summary>
-        /// Find næste version nummer baseret på eksisterende mapper
-        /// </summary>
-        private string GetNextVersionNumber(string parentFolder, string tableName)
-        {
-            try
-            {
-                if (!Directory.Exists(parentFolder))
-                    return "v1.0";
-
-                var existingFolders = Directory.GetDirectories(parentFolder)
-                    .Where(dir =>
-                    {
-                        var name = Path.GetFileName(dir);
-                        // Match: split_{tableName}_table{nummer}_v{version}
-                        return Regex.IsMatch(name, $@"^split_{Regex.Escape(tableName)}_table\d+_v[\d\.]+$");
-                    })
-                    .ToList();
-
-                if (existingFolders.Count == 0)
-                    return "v1.0";
-
-                // Find højeste version nummer
-                double maxVersion = 0;
-                foreach (var folder in existingFolders)
-                {
-                    var folderName = Path.GetFileName(folder);
-                    var versionStart = folderName.IndexOf("_v") + 2;
-                    var versionEnd = folderName.IndexOf("_", versionStart);
-
-                    if (versionStart > 1 && versionEnd > versionStart)
-                    {
-                        var versionStr = folderName.Substring(versionStart, versionEnd - versionStart);
-                        if (double.TryParse(versionStr, out double version))
-                        {
-                            maxVersion = Math.Max(maxVersion, version);
-                        }
-                    }
-                }
-
-                double newVersion = maxVersion + 0.1;
-                return $"v{newVersion.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)}";  // Bruger punktum
-            }
-            catch
-            {
-                return "v1.0";
-            }
         }
 
         /// <summary>

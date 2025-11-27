@@ -231,10 +231,10 @@ namespace TestvaerkstedetToolkit
                 currentXSDPath = Path.ChangeExtension(currentXMLPath, ".xsd");
 
                 // Count rows fra XML
-                CountRowsFromXML();
+                totalRows = XMLHelper.CountRowsFromXML(currentXMLPath);
 
                 // Set original namespace
-                DetectOriginalNamespace();
+                originalNamespace = XMLNamespaceHelper.DetectNamespace(currentXMLPath);
 
                 UpdateUIAfterStructureAnalysis();
             }
@@ -582,7 +582,7 @@ namespace TestvaerkstedetToolkit
 
                     if (openResult == DialogResult.Yes)
                     {
-                        OpenDirectorySafely(result.OutputDirectory);
+                        FileSystemHelper.OpenDirectorySafely(result.OutputDirectory);
                     }
                 }
                 else
@@ -891,52 +891,6 @@ namespace TestvaerkstedetToolkit
         #region Helper Methods
 
         /// <summary>
-        /// Sikker directory åbning med fallbacks
-        /// </summary>
-        private void OpenDirectorySafely(string directoryPath)
-        {
-            try
-            {
-                if (!Directory.Exists(directoryPath))
-                {
-                    MessageBox.Show($"Mappe eksisterer ikke: {directoryPath}");
-                    return;
-                }
-
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
-                {
-                    FileName = directoryPath,
-                    UseShellExecute = true,
-                    Verb = "open"
-                });
-            }
-            catch (Exception)
-            {
-                try
-                {
-                    System.Diagnostics.Process.Start("explorer.exe", $"\"{directoryPath}\"");
-                }
-                catch (Exception)
-                {
-                    try
-                    {
-                        Clipboard.SetText(directoryPath);
-                        MessageBox.Show($"Kunne ikke åbne mappe automatisk.\n\n" +
-                                      $"Sti kopieret til clipboard:\n{directoryPath}\n\n" +
-                                      $"Indsæt i File Explorer adressefelt.",
-                                      "Mappe Åbning Fejlede", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    catch
-                    {
-                        MessageBox.Show($"Kunne ikke åbne mappe:\n{directoryPath}\n\n" +
-                                      $"Åbn manuelt i File Explorer.",
-                                      "Fejl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Progress reporter adapter for service integration
         /// Forbinder XMLSplitService progress callbacks med UI controls
         /// </summary>
@@ -969,71 +923,6 @@ namespace TestvaerkstedetToolkit
                 }
             }
         }
-
-        /// <summary>
-        /// Detect original namespace fra XML fil
-        /// </summary>
-        private void DetectOriginalNamespace()
-        {
-            originalNamespace = "http://www.sa.dk/xmlns/siard/1.0/schema0/";
-
-            if (string.IsNullOrEmpty(currentXMLPath) || !File.Exists(currentXMLPath))
-                return;
-
-            try
-            {
-                using (var reader = XmlReader.Create(currentXMLPath))
-                {
-                    while (reader.Read())
-                    {
-                        if (reader.NodeType == XmlNodeType.Element && reader.Name == "table")
-                        {
-                            string xmlns = reader.GetAttribute("xmlns");
-                            if (!string.IsNullOrEmpty(xmlns))
-                            {
-                                originalNamespace = xmlns;
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Fejl ved detection af namespace: {ex.Message}");
-            }
-        }
-
-        /// <summary>
-        /// Count rækker fra XML fil
-        /// </summary>
-        private void CountRowsFromXML()
-        {
-            totalRows = 0;
-
-            if (string.IsNullOrEmpty(currentXMLPath) || !File.Exists(currentXMLPath))
-                return;
-
-            try
-            {
-                using (var reader = XmlReader.Create(currentXMLPath))
-                {
-                    while (reader.Read())
-                    {
-                        if (reader.NodeType == XmlNodeType.Element && reader.Name == "row")
-                        {
-                            totalRows++;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Fejl ved row counting: {ex.Message}");
-                totalRows = 0;
-            }
-        }
-
         #endregion
     }
 }

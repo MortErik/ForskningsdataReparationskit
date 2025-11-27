@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using TestvaerkstedetToolkit.Models;
+using TestvaerkstedetToolkit.Utilities;
 
 namespace TestvaerkstedetToolkit.Services
 {
@@ -29,7 +30,7 @@ namespace TestvaerkstedetToolkit.Services
             string xmlPath = Path.Combine(tablePath, xmlFileName);
 
             // Generer namespace med korrekt tabelnummer
-            string newNamespace = $"http://www.sa.dk/xmlns/siard/1.0/schema0/table{tableNumber}.xsd";
+            string newNamespace = XMLNamespaceHelper.GenerateTableNamespace(tableNumber);
 
             GenerateXMLFile(table, xmlPath, newNamespace, uiData, tableNumber);
         }

@@ -83,6 +83,8 @@
     <Compile Include="Utilities\SplitGenerator.cs" />
     <Compile Include="Utilities\SplitLogger.cs" />
     <Compile Include="Utilities\TableIndexParser.cs" />
+    <Compile Include="Utilities\XMLHelper.cs" />
+    <Compile Include="Utilities\XMLNamespaceHelper.cs" />
     <Compile Include="WelcomeForm.cs">
       <SubType>Form</SubType>
     </Compile>
