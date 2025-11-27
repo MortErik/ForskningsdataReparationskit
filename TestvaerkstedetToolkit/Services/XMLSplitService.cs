@@ -105,6 +105,10 @@ namespace TestvaerkstedetToolkit.Services
                 for (int i = 0; i < uiData.Tables.Count; i++)
                 {
                     int currentTableNumber = (i == 0) ? originalTableNumber : nextTableNumber + (i - 1);
+
+                    //int progressPercent = 10 + (int)((i / (double)uiData.Tables.Count) * 65);
+                    //progress?.Report(progressPercent, $"Generer tabel {i + 1} af {uiData.Tables.Count}...");
+
                     fileGenerationService.GenerateTableFiles(uiData.Tables[i], tempDirectory, uiData, currentTableNumber);
                 }
 

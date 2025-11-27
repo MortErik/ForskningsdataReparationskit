@@ -35,28 +35,22 @@
             this.cmbTableSelector = new System.Windows.Forms.ComboBox();
             this.lblTableSelector = new System.Windows.Forms.Label();
             this.lblTableInfo = new System.Windows.Forms.Label();
-
             this.groupBoxFileSelection = new System.Windows.Forms.GroupBox();
-            this.txtSourceXML = new System.Windows.Forms.TextBox();
             this.lblSourceXML = new System.Windows.Forms.Label();
-
+            this.txtSourceXML = new System.Windows.Forms.TextBox();
             this.groupBoxPrimaryKey = new System.Windows.Forms.GroupBox();
-            this.compositePKSelector = new TestvaerkstedetToolkit.Controls.CompositePKSelector();
             this.btnAnalyzePK = new System.Windows.Forms.Button();
-
             this.groupBoxSplitConfiguration = new System.Windows.Forms.GroupBox();
             this.txtSplitPoints = new System.Windows.Forms.TextBox();
             this.lblSplitPoints = new System.Windows.Forms.Label();
             this.btnCalculateSplit = new System.Windows.Forms.Button();
-
             this.groupBoxSplitPreview = new System.Windows.Forms.GroupBox();
             this.lstSplitPreview = new System.Windows.Forms.ListBox();
             this.lblPreviewInfo = new System.Windows.Forms.Label();
-
             this.groupBoxExecution = new System.Windows.Forms.GroupBox();
             this.btnExecuteSplit = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
-
+            this.compositePKSelector = new TestvaerkstedetToolkit.Controls.CompositePKSelector();
             this.groupBoxTableIndex.SuspendLayout();
             this.groupBoxFileSelection.SuspendLayout();
             this.groupBoxPrimaryKey.SuspendLayout();
@@ -64,7 +58,6 @@
             this.groupBoxSplitPreview.SuspendLayout();
             this.groupBoxExecution.SuspendLayout();
             this.SuspendLayout();
-
             // 
             // groupBoxTableIndex
             // 
@@ -74,188 +67,184 @@
             this.groupBoxTableIndex.Controls.Add(this.cmbTableSelector);
             this.groupBoxTableIndex.Controls.Add(this.lblTableSelector);
             this.groupBoxTableIndex.Controls.Add(this.lblTableInfo);
-            this.groupBoxTableIndex.Location = new System.Drawing.Point(25, 80);
+            this.groupBoxTableIndex.Location = new System.Drawing.Point(19, 52);
+            this.groupBoxTableIndex.Margin = new System.Windows.Forms.Padding(2);
             this.groupBoxTableIndex.Name = "groupBoxTableIndex";
-            this.groupBoxTableIndex.Size = new System.Drawing.Size(1130, 130);
+            this.groupBoxTableIndex.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBoxTableIndex.Size = new System.Drawing.Size(848, 84);
             this.groupBoxTableIndex.TabIndex = 0;
             this.groupBoxTableIndex.TabStop = false;
             this.groupBoxTableIndex.Text = "1. TableIndex Workflow (Hovedindgang)";
-
             // 
             // btnBrowseTableIndex
             // 
-            this.btnBrowseTableIndex.Location = new System.Drawing.Point(1010, 30);
+            this.btnBrowseTableIndex.Location = new System.Drawing.Point(758, 20);
+            this.btnBrowseTableIndex.Margin = new System.Windows.Forms.Padding(2);
             this.btnBrowseTableIndex.Name = "btnBrowseTableIndex";
-            this.btnBrowseTableIndex.Size = new System.Drawing.Size(100, 35);
+            this.btnBrowseTableIndex.Size = new System.Drawing.Size(75, 23);
             this.btnBrowseTableIndex.TabIndex = 1;
             this.btnBrowseTableIndex.Text = "Browse...";
             this.btnBrowseTableIndex.UseVisualStyleBackColor = true;
             this.btnBrowseTableIndex.Click += new System.EventHandler(this.btnBrowseTableIndex_Click);
-
             // 
             // txtTableIndexPath
             // 
-            this.txtTableIndexPath.Location = new System.Drawing.Point(150, 30);
+            this.txtTableIndexPath.Location = new System.Drawing.Point(112, 20);
+            this.txtTableIndexPath.Margin = new System.Windows.Forms.Padding(2);
             this.txtTableIndexPath.Name = "txtTableIndexPath";
             this.txtTableIndexPath.ReadOnly = true;
-            this.txtTableIndexPath.Size = new System.Drawing.Size(850, 27);
+            this.txtTableIndexPath.Size = new System.Drawing.Size(638, 20);
             this.txtTableIndexPath.TabIndex = 0;
-
             // 
             // lblTableIndexPath
             // 
             this.lblTableIndexPath.AutoSize = true;
-            this.lblTableIndexPath.Location = new System.Drawing.Point(20, 33);
+            this.lblTableIndexPath.Location = new System.Drawing.Point(15, 21);
+            this.lblTableIndexPath.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTableIndexPath.Name = "lblTableIndexPath";
-            this.lblTableIndexPath.Size = new System.Drawing.Size(120, 15);
+            this.lblTableIndexPath.Size = new System.Drawing.Size(94, 13);
             this.lblTableIndexPath.TabIndex = 0;
             this.lblTableIndexPath.Text = "TableIndex.xml sti:";
-
             // 
             // cmbTableSelector
             // 
             this.cmbTableSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbTableSelector.Enabled = false;
-            this.cmbTableSelector.Location = new System.Drawing.Point(150, 70);
+            this.cmbTableSelector.Location = new System.Drawing.Point(112, 46);
+            this.cmbTableSelector.Margin = new System.Windows.Forms.Padding(2);
             this.cmbTableSelector.Name = "cmbTableSelector";
-            this.cmbTableSelector.Size = new System.Drawing.Size(850, 28);
+            this.cmbTableSelector.Size = new System.Drawing.Size(638, 21);
             this.cmbTableSelector.TabIndex = 2;
             this.cmbTableSelector.SelectedIndexChanged += new System.EventHandler(this.cmbTableSelector_SelectedIndexChanged);
-
             // 
             // lblTableSelector
             // 
             this.lblTableSelector.AutoSize = true;
-            this.lblTableSelector.Location = new System.Drawing.Point(20, 73);
+            this.lblTableSelector.Location = new System.Drawing.Point(15, 47);
+            this.lblTableSelector.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTableSelector.Name = "lblTableSelector";
-            this.lblTableSelector.Size = new System.Drawing.Size(71, 15);
+            this.lblTableSelector.Size = new System.Drawing.Size(61, 13);
             this.lblTableSelector.TabIndex = 0;
             this.lblTableSelector.Text = "Vælg tabel:";
-
             // 
             // lblTableInfo
             // 
             this.lblTableInfo.AutoSize = true;
             this.lblTableInfo.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblTableInfo.Location = new System.Drawing.Point(20, 105);
+            this.lblTableInfo.Location = new System.Drawing.Point(15, 68);
+            this.lblTableInfo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTableInfo.Name = "lblTableInfo";
-            this.lblTableInfo.Size = new System.Drawing.Size(200, 15);
+            this.lblTableInfo.Size = new System.Drawing.Size(167, 13);
             this.lblTableInfo.TabIndex = 0;
             this.lblTableInfo.Text = "Vælg tableIndex.xml for at starte...";
-
             // 
             // groupBoxFileSelection
             // 
             this.groupBoxFileSelection.Controls.Add(this.lblSourceXML);
             this.groupBoxFileSelection.Controls.Add(this.txtSourceXML);
-            this.groupBoxFileSelection.Location = new System.Drawing.Point(25, 225);
+            this.groupBoxFileSelection.Location = new System.Drawing.Point(19, 146);
+            this.groupBoxFileSelection.Margin = new System.Windows.Forms.Padding(2);
             this.groupBoxFileSelection.Name = "groupBoxFileSelection";
-            this.groupBoxFileSelection.Size = new System.Drawing.Size(1160, 70);
+            this.groupBoxFileSelection.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBoxFileSelection.Size = new System.Drawing.Size(848, 46);
             this.groupBoxFileSelection.TabIndex = 1;
             this.groupBoxFileSelection.TabStop = false;
             this.groupBoxFileSelection.Text = "2. XML Fil (Auto-foreslået fra TableIndex)";
-
-            // 
-            // txtSourceXML
-            // 
-            this.txtSourceXML.Location = new System.Drawing.Point(105, 25);
-            this.txtSourceXML.Name = "txtSourceXML";
-            this.txtSourceXML.ReadOnly = true;
-            this.txtSourceXML.BackColor = System.Drawing.SystemColors.Control;
-            this.txtSourceXML.Size = new System.Drawing.Size(1030, 20);
-            this.txtSourceXML.TabIndex = 1;
-
             // 
             // lblSourceXML
             // 
             this.lblSourceXML.AutoSize = true;
-            this.lblSourceXML.Location = new System.Drawing.Point(15, 28);
+            this.lblSourceXML.Location = new System.Drawing.Point(11, 18);
+            this.lblSourceXML.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblSourceXML.Name = "lblSourceXML";
-            this.lblSourceXML.Size = new System.Drawing.Size(62, 13);
+            this.lblSourceXML.Size = new System.Drawing.Size(58, 13);
             this.lblSourceXML.TabIndex = 0;
             this.lblSourceXML.Text = "Kilde XML:";
-
+            // 
+            // txtSourceXML
+            // 
+            this.txtSourceXML.BackColor = System.Drawing.SystemColors.Control;
+            this.txtSourceXML.Location = new System.Drawing.Point(79, 16);
+            this.txtSourceXML.Margin = new System.Windows.Forms.Padding(2);
+            this.txtSourceXML.Name = "txtSourceXML";
+            this.txtSourceXML.ReadOnly = true;
+            this.txtSourceXML.Size = new System.Drawing.Size(754, 20);
+            this.txtSourceXML.TabIndex = 1;
             // 
             // groupBoxPrimaryKey
             // 
             this.groupBoxPrimaryKey.Controls.Add(this.compositePKSelector);
             this.groupBoxPrimaryKey.Controls.Add(this.btnAnalyzePK);
-            this.groupBoxPrimaryKey.Location = new System.Drawing.Point(25, 310);
+            this.groupBoxPrimaryKey.Location = new System.Drawing.Point(19, 202);
+            this.groupBoxPrimaryKey.Margin = new System.Windows.Forms.Padding(2);
             this.groupBoxPrimaryKey.Name = "groupBoxPrimaryKey";
-            this.groupBoxPrimaryKey.Size = new System.Drawing.Size(1130, 380);
+            this.groupBoxPrimaryKey.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBoxPrimaryKey.Size = new System.Drawing.Size(848, 289);
             this.groupBoxPrimaryKey.TabIndex = 2;
             this.groupBoxPrimaryKey.TabStop = false;
             this.groupBoxPrimaryKey.Text = "3. Primærnøgle konfiguration";
-
-            // 
-            // compositePKSelector
-            // 
-            this.compositePKSelector.Location = new System.Drawing.Point(20, 30);
-            this.compositePKSelector.Name = "compositePKSelector";
-            this.compositePKSelector.Size = new System.Drawing.Size(900, 320);
-            this.compositePKSelector.TabIndex = 0;
-            this.compositePKSelector.PrimaryKeyChanged += new System.EventHandler(this.CompositePKSelector_PrimaryKeyChanged);
-
             // 
             // btnAnalyzePK
             // 
             this.btnAnalyzePK.Enabled = false;
-            this.btnAnalyzePK.Location = new System.Drawing.Point(940, 30);
+            this.btnAnalyzePK.Location = new System.Drawing.Point(705, 20);
+            this.btnAnalyzePK.Margin = new System.Windows.Forms.Padding(2);
             this.btnAnalyzePK.Name = "btnAnalyzePK";
-            this.btnAnalyzePK.Size = new System.Drawing.Size(170, 35);
+            this.btnAnalyzePK.Size = new System.Drawing.Size(128, 23);
             this.btnAnalyzePK.TabIndex = 1;
             this.btnAnalyzePK.Text = "🔍 Analysér PK Unikhed";
             this.btnAnalyzePK.UseVisualStyleBackColor = true;
             this.btnAnalyzePK.Click += new System.EventHandler(this.btnAnalyzePK_Click);
-
             // 
             // groupBoxSplitConfiguration
             // 
             this.groupBoxSplitConfiguration.Controls.Add(this.txtSplitPoints);
             this.groupBoxSplitConfiguration.Controls.Add(this.lblSplitPoints);
             this.groupBoxSplitConfiguration.Controls.Add(this.btnCalculateSplit);
-            this.groupBoxSplitConfiguration.Location = new System.Drawing.Point(25, 705);
+            this.groupBoxSplitConfiguration.Location = new System.Drawing.Point(19, 495);
+            this.groupBoxSplitConfiguration.Margin = new System.Windows.Forms.Padding(2);
             this.groupBoxSplitConfiguration.Name = "groupBoxSplitConfiguration";
-            this.groupBoxSplitConfiguration.Size = new System.Drawing.Size(1130, 120);
+            this.groupBoxSplitConfiguration.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBoxSplitConfiguration.Size = new System.Drawing.Size(848, 105);
             this.groupBoxSplitConfiguration.TabIndex = 3;
             this.groupBoxSplitConfiguration.TabStop = false;
             this.groupBoxSplitConfiguration.Text = "4. Split Konfiguration";
-
             // 
             // txtSplitPoints
             // 
             this.txtSplitPoints.Enabled = false;
-            this.txtSplitPoints.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtSplitPoints.Location = new System.Drawing.Point(20, 50);
+            this.txtSplitPoints.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtSplitPoints.Location = new System.Drawing.Point(14, 38);
+            this.txtSplitPoints.Margin = new System.Windows.Forms.Padding(2);
             this.txtSplitPoints.Multiline = true;
             this.txtSplitPoints.Name = "txtSplitPoints";
             this.txtSplitPoints.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtSplitPoints.Size = new System.Drawing.Size(900, 60);
+            this.txtSplitPoints.Size = new System.Drawing.Size(676, 40);
             this.txtSplitPoints.TabIndex = 0;
-            this.txtSplitPoints.Text = "Eksempel: 9, 18 (split efter kolonne 9 og 18)\nLad stå tom for auto-split baseret på PK kapacitet";
-
+            this.txtSplitPoints.Text = "Eksempel: 9, 18 (split efter kolonne 9 og 18)\nLad stå tom for auto-split baseret " +
+    "på PK kapacitet";
             // 
             // lblSplitPoints
             // 
             this.lblSplitPoints.AutoSize = true;
-            this.lblSplitPoints.Location = new System.Drawing.Point(20, 30);
+            this.lblSplitPoints.Location = new System.Drawing.Point(15, 20);
+            this.lblSplitPoints.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblSplitPoints.Name = "lblSplitPoints";
-            this.lblSplitPoints.Size = new System.Drawing.Size(200, 15);
+            this.lblSplitPoints.Size = new System.Drawing.Size(156, 13);
             this.lblSplitPoints.TabIndex = 0;
             this.lblSplitPoints.Text = "Split punkter (kommasepareret):";
-
             // 
             // btnCalculateSplit
             // 
             this.btnCalculateSplit.Enabled = false;
-            this.btnCalculateSplit.Location = new System.Drawing.Point(940, 50);
+            this.btnCalculateSplit.Location = new System.Drawing.Point(705, 32);
+            this.btnCalculateSplit.Margin = new System.Windows.Forms.Padding(2);
             this.btnCalculateSplit.Name = "btnCalculateSplit";
-            this.btnCalculateSplit.Size = new System.Drawing.Size(170, 35);
+            this.btnCalculateSplit.Size = new System.Drawing.Size(128, 23);
             this.btnCalculateSplit.TabIndex = 1;
             this.btnCalculateSplit.Text = "Beregn Split";
             this.btnCalculateSplit.UseVisualStyleBackColor = true;
             this.btnCalculateSplit.Click += new System.EventHandler(this.btnCalculateSplit_Click);
-
             // 
             // groupBoxSplitPreview
             // 
@@ -264,36 +253,38 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxSplitPreview.Controls.Add(this.lstSplitPreview);
             this.groupBoxSplitPreview.Controls.Add(this.lblPreviewInfo);
-            this.groupBoxSplitPreview.Location = new System.Drawing.Point(25, 840);
+            this.groupBoxSplitPreview.Location = new System.Drawing.Point(19, 604);
+            this.groupBoxSplitPreview.Margin = new System.Windows.Forms.Padding(2);
             this.groupBoxSplitPreview.Name = "groupBoxSplitPreview";
-            this.groupBoxSplitPreview.Size = new System.Drawing.Size(1130, 140);
+            this.groupBoxSplitPreview.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBoxSplitPreview.Size = new System.Drawing.Size(848, 134);
             this.groupBoxSplitPreview.TabIndex = 4;
             this.groupBoxSplitPreview.TabStop = false;
             this.groupBoxSplitPreview.Text = "5. Split Preview";
-
             // 
             // lstSplitPreview
             // 
             this.lstSplitPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lstSplitPreview.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lstSplitPreview.Location = new System.Drawing.Point(20, 50);
+            this.lstSplitPreview.Font = new System.Drawing.Font("Courier New", 9F);
+            this.lstSplitPreview.ItemHeight = 15;
+            this.lstSplitPreview.Location = new System.Drawing.Point(14, 56);
+            this.lstSplitPreview.Margin = new System.Windows.Forms.Padding(2);
             this.lstSplitPreview.Name = "lstSplitPreview";
-            this.lstSplitPreview.Size = new System.Drawing.Size(1090, 75);
+            this.lstSplitPreview.Size = new System.Drawing.Size(819, 64);
             this.lstSplitPreview.TabIndex = 0;
-
             // 
             // lblPreviewInfo
             // 
             this.lblPreviewInfo.AutoSize = true;
             this.lblPreviewInfo.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblPreviewInfo.Location = new System.Drawing.Point(20, 30);
+            this.lblPreviewInfo.Location = new System.Drawing.Point(15, 26);
+            this.lblPreviewInfo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblPreviewInfo.Name = "lblPreviewInfo";
-            this.lblPreviewInfo.Size = new System.Drawing.Size(150, 15);
+            this.lblPreviewInfo.Size = new System.Drawing.Size(108, 13);
             this.lblPreviewInfo.TabIndex = 0;
             this.lblPreviewInfo.Text = "Konfigurer split først...";
-
             // 
             // groupBoxExecution
             // 
@@ -301,55 +292,66 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxExecution.Controls.Add(this.btnExecuteSplit);
             this.groupBoxExecution.Controls.Add(this.progressBar);
-            this.groupBoxExecution.Location = new System.Drawing.Point(25, 995);
+            this.groupBoxExecution.Location = new System.Drawing.Point(19, 748);
+            this.groupBoxExecution.Margin = new System.Windows.Forms.Padding(2);
             this.groupBoxExecution.Name = "groupBoxExecution";
-            this.groupBoxExecution.Size = new System.Drawing.Size(1130, 80);
+            this.groupBoxExecution.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBoxExecution.Size = new System.Drawing.Size(848, 52);
             this.groupBoxExecution.TabIndex = 5;
             this.groupBoxExecution.TabStop = false;
             this.groupBoxExecution.Text = "6. Split Operation";
-
             // 
             // btnExecuteSplit
             // 
             this.btnExecuteSplit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.btnExecuteSplit.Enabled = false;
             this.btnExecuteSplit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExecuteSplit.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnExecuteSplit.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnExecuteSplit.ForeColor = System.Drawing.Color.White;
-            this.btnExecuteSplit.Location = new System.Drawing.Point(20, 25);
+            this.btnExecuteSplit.Location = new System.Drawing.Point(15, 16);
+            this.btnExecuteSplit.Margin = new System.Windows.Forms.Padding(2);
             this.btnExecuteSplit.Name = "btnExecuteSplit";
-            this.btnExecuteSplit.Size = new System.Drawing.Size(220, 40);
+            this.btnExecuteSplit.Size = new System.Drawing.Size(165, 26);
             this.btnExecuteSplit.TabIndex = 0;
             this.btnExecuteSplit.Text = "Udfør Split";
             this.btnExecuteSplit.UseVisualStyleBackColor = false;
             this.btnExecuteSplit.Click += new System.EventHandler(this.btnExecuteSplit_Click);
-
             // 
             // progressBar
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar.Location = new System.Drawing.Point(260, 25);
+            this.progressBar.Location = new System.Drawing.Point(195, 16);
+            this.progressBar.Margin = new System.Windows.Forms.Padding(2);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(850, 40);
+            this.progressBar.Size = new System.Drawing.Size(638, 26);
             this.progressBar.TabIndex = 1;
             this.progressBar.Visible = false;
-
+            // 
+            // compositePKSelector
+            // 
+            this.compositePKSelector.BackColor = System.Drawing.SystemColors.Control;
+            this.compositePKSelector.Location = new System.Drawing.Point(15, 20);
+            this.compositePKSelector.Margin = new System.Windows.Forms.Padding(2);
+            this.compositePKSelector.Name = "compositePKSelector";
+            this.compositePKSelector.Size = new System.Drawing.Size(686, 265);
+            this.compositePKSelector.TabIndex = 0;
+            this.compositePKSelector.PrimaryKeyChanged += new System.EventHandler(this.CompositePKSelector_PrimaryKeyChanged);
             // 
             // XMLTableSplitterForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(1200, 1100);
+            this.ClientSize = new System.Drawing.Size(900, 816);
             this.Controls.Add(this.groupBoxTableIndex);
             this.Controls.Add(this.groupBoxFileSelection);
             this.Controls.Add(this.groupBoxPrimaryKey);
             this.Controls.Add(this.groupBoxSplitConfiguration);
             this.Controls.Add(this.groupBoxSplitPreview);
             this.Controls.Add(this.groupBoxExecution);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-            this.MinimumSize = new System.Drawing.Size(1200, 800);
+            this.Margin = new System.Windows.Forms.Padding(2);
+            this.MinimumSize = new System.Drawing.Size(904, 534);
             this.Name = "XMLTableSplitterForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "XML Table Splitter";
@@ -364,6 +366,7 @@
             this.groupBoxSplitPreview.PerformLayout();
             this.groupBoxExecution.ResumeLayout(false);
             this.ResumeLayout(false);
+
         }
 
         #endregion

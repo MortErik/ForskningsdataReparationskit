@@ -58,7 +58,7 @@ namespace TestvaerkstedetToolkit.Services
             int maxDataColumnsPerSplit = Math.Max(0, 950 - pkColumnsCount);
 
             if (maxDataColumnsPerSplit <= 0)
-                throw new InvalidOperationException($"For mange PK kolonner ({pkColumnsCount}). Maksimalt 949 PK kolonner tilladt.");
+                throw new InvalidOperationException($"For mange PK kolonner ({pkColumnsCount}). Maksimalt 999 PK kolonner tilladt.");
 
             // 3. BEREGN ANTAL SPLITS NØDVENDIGE
             int requiredSplits = (int)Math.Ceiling((double)nonPKColumns.Count / maxDataColumnsPerSplit);
@@ -206,9 +206,9 @@ namespace TestvaerkstedetToolkit.Services
                 }
 
                 // Tjek kolonneantal under grænse
-                if (split.Columns.Count > 950)
+                if (split.Columns.Count > 1000)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Validation failed: Split {split.SplitIndex} has {split.Columns.Count} columns (over 950 limit)");
+                    System.Diagnostics.Debug.WriteLine($"Validation failed: Split {split.SplitIndex} has {split.Columns.Count} columns (over 1000 limit)");
                     return false;
                 }
             }

@@ -63,8 +63,8 @@ namespace TestvaerkstedetToolkit
             if (compositePKSelector.IsValid())
             {
                 // Update preview og enable knapper
-                UpdateSplitPreview();
-                btnExecuteSplit.Enabled = true;
+                //UpdateSplitPreview();
+                btnCalculateSplit.Enabled = true;
                 btnAnalyzePK.Enabled = true;  // Enable PK analyse når PK er valgt
 
                 // Log PK konfiguration til debug
@@ -75,6 +75,7 @@ namespace TestvaerkstedetToolkit
             else
             {
                 // Disable knapper og vis fejl
+                btnExecuteSplit.Enabled = false;
                 btnExecuteSplit.Enabled = false;
                 btnAnalyzePK.Enabled = false;
                 lblPreviewInfo.Text = compositePKSelector.GetValidationError();
@@ -346,7 +347,7 @@ namespace TestvaerkstedetToolkit
 
                 if (!string.IsNullOrEmpty(validation))
                 {
-                    MessageBox.Show($"Split punkter er ikke gyldige:\n{validation}");
+                    MessageBox.Show($"Split punkter er over 975 kolonner:\n{validation}");
                     return;
                 }
 
@@ -457,7 +458,7 @@ namespace TestvaerkstedetToolkit
             var tableSizes = CalculateTableSizes(splitPoints);
             for (int i = 0; i < tableSizes.Count; i++)
             {
-                if (tableSizes[i] > 950)
+                if (tableSizes[i] > 1000)
                 {
                     errors.Add($"Tabel {i + 1} vil få {tableSizes[i]} kolonner (over 950 grænse)");
                 }
@@ -599,7 +600,7 @@ namespace TestvaerkstedetToolkit
                                    totalColumnCount > 950 ? "[ADVARSEL]" : "[OK]";
 
                 string statusText = totalColumnCount > 1000 ? " - OVER 1000 KOLONNE GRÆNSE" :
-                                   totalColumnCount > 950 ? " - NÆRMER SIG 1000 KOLONNE GRÆNSE" : "";
+                                   totalColumnCount > 975 ? " - NÆRMER SIG 1000 KOLONNE GRÆNSE" : "";
 
                 string intervalText = $"kolonner {table.StartColumn}-{table.EndColumn}";
                 string countText = $"({dataColumnCount} data + {pkColumnsCount} PK = {totalColumnCount} total)";
@@ -707,7 +708,9 @@ namespace TestvaerkstedetToolkit
             {
                 btnAnalyzePK.Enabled = false;
                 progressBar.Visible = true;
-                progressBar.Style = ProgressBarStyle.Marquee;
+                progressBar.Style = ProgressBarStyle.Continuous;
+                progressBar.Value = 0;
+                progressBar.Maximum = 100;
 
                 var pkAnalysisService = new PrimaryKeyAnalysisService();
                 var pkInfo = compositePKSelector.GetPrimaryKeyInfo();
@@ -733,7 +736,6 @@ namespace TestvaerkstedetToolkit
             finally
             {
                 btnAnalyzePK.Enabled = true;
-                progressBar.Style = ProgressBarStyle.Continuous;
             }
         }
 
@@ -994,7 +996,7 @@ namespace TestvaerkstedetToolkit
 
         #region Split Execution
 
-        private void btnExecuteSplit_Click(object sender, EventArgs e)
+        private async void btnExecuteSplit_Click(object sender, EventArgs e)
         {
             if (!compositePKSelector.IsValid())
             {
@@ -1006,7 +1008,9 @@ namespace TestvaerkstedetToolkit
             {
                 btnExecuteSplit.Enabled = false;
                 progressBar.Visible = true;
-                progressBar.Style = ProgressBarStyle.Marquee;
+                progressBar.Style = ProgressBarStyle.Continuous;
+                progressBar.Value = 0;
+                progressBar.Maximum = 100;
 
                 var uiData = CollectUIData();
 
@@ -1021,7 +1025,7 @@ namespace TestvaerkstedetToolkit
                 LogSplitConfiguration(uiData);
 
                 // Kør split execution
-                ExecuteSplitOperation(uiData);
+                await ExecuteSplitOperation(uiData);
             }
             catch (Exception ex)
             {
@@ -1032,7 +1036,7 @@ namespace TestvaerkstedetToolkit
             {
                 btnExecuteSplit.Enabled = true;
                 progressBar.Visible = false;
-                progressBar.Style = ProgressBarStyle.Continuous;
+                progressBar.Value = 0;
             }
         }
 
@@ -1040,7 +1044,7 @@ namespace TestvaerkstedetToolkit
         /// Kør split operation med fuld logging og fil generering
         /// Bruger nu XMLSplitService orchestrator
         /// </summary>
-        private async void ExecuteSplitOperation(UIDataContainer uiData)
+        private async Task ExecuteSplitOperation(UIDataContainer uiData)
         {
             try
             {
@@ -1351,7 +1355,7 @@ namespace TestvaerkstedetToolkit
             log.AppendLine($"Original Tabel:        {uiData.OriginalTableName}");
             log.AppendLine($"Total Rækker:          {uiData.TotalRows}");
             log.AppendLine($"Total Kolonner:        {uiData.AllColumns.Count}");
-            log.AppendLine($"Split Strategi:        {uiData.Tables.Count} tabeller (maks 950 kolonner per tabel)");
+            log.AppendLine($"Split Strategi:        {uiData.Tables.Count} tabeller (maks 995 kolonner per tabel)");
             log.AppendLine($"PK Type:               {(pkInfo.IsComposite ? "Composite" : "Single")} ({string.Join(", ", pkColumns)})");
             log.AppendLine($"Version:               {versionNumber}");
             log.AppendLine($"Output Mappe:          {outputDirectory}");

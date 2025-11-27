@@ -122,7 +122,7 @@ namespace TestvaerkstedetToolkit
             // lblParentXml
             // 
             this.lblParentXml.AutoSize = true;
-            this.lblParentXml.Location = new System.Drawing.Point(20, 200);
+            this.lblParentXml.Location = new System.Drawing.Point(21, 200);
             this.lblParentXml.Name = "lblParentXml";
             this.lblParentXml.Size = new System.Drawing.Size(91, 13);
             this.lblParentXml.TabIndex = 0;
@@ -170,7 +170,7 @@ namespace TestvaerkstedetToolkit
             // lblChildXml
             // 
             this.lblChildXml.AutoSize = true;
-            this.lblChildXml.Location = new System.Drawing.Point(20, 265);
+            this.lblChildXml.Location = new System.Drawing.Point(21, 265);
             this.lblChildXml.Name = "lblChildXml";
             this.lblChildXml.Size = new System.Drawing.Size(83, 13);
             this.lblChildXml.TabIndex = 0;
@@ -284,8 +284,8 @@ namespace TestvaerkstedetToolkit
             // 
             // lstXmlMissingValues
             // 
-            this.lstXmlMissingValues.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.lstXmlMissingValues.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lstXmlMissingValues.Location = new System.Drawing.Point(40, 610);
             this.lstXmlMissingValues.Name = "lstXmlMissingValues";
@@ -330,13 +330,14 @@ namespace TestvaerkstedetToolkit
             // 
             // txtIntegrityDesc
             // 
-            this.txtIntegrityDesc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.txtIntegrityDesc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtIntegrityDesc.Location = new System.Drawing.Point(560, 692);
             this.txtIntegrityDesc.Name = "txtIntegrityDesc";
             this.txtIntegrityDesc.Size = new System.Drawing.Size(600, 20);
             this.txtIntegrityDesc.TabIndex = 18;
-            this.txtIntegrityDesc.Text = "Betydning ukendt. Rækken er tilføjet under aflevering til arkiv, for at sikre referentiel integritet i databasen af hensyn til langtidsbevaring";
+            this.txtIntegrityDesc.Text = "Betydning ukendt. Rækken er tilføjet under aflevering til arkiv, for at sikre ref" +
+    "erentiel integritet i databasen af hensyn til langtidsbevaring";
             // 
             // btnGenerateFixedXml
             // 
@@ -354,7 +355,7 @@ namespace TestvaerkstedetToolkit
             // 
             // progressBar1
             // 
-            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar1.Location = new System.Drawing.Point(12, 825);
             this.progressBar1.Name = "progressBar1";
@@ -370,7 +371,8 @@ namespace TestvaerkstedetToolkit
             this.lblTableIndexInfo.Name = "lblTableIndexInfo";
             this.lblTableIndexInfo.Size = new System.Drawing.Size(800, 30);
             this.lblTableIndexInfo.TabIndex = 3;
-            this.lblTableIndexInfo.Text = "💡 TableIndex giver bedre kolonnenavne, datatyper og beskrivelser.\nKan springes over - programmet parser direkte fra XML.";
+            this.lblTableIndexInfo.Text = "💡 TableIndex giver bedre kolonnenavne, datatyper og beskrivelser.\nKan springes o" +
+    "ver - programmet parser direkte fra XML.";
             // 
             // separator1
             // 
