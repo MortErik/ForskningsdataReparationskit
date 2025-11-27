@@ -14,20 +14,6 @@ namespace TestvaerkstedetToolkit.Utilities
 
             switch (dataType?.ToUpper())
             {
-                case "DATE":
-                    return "9999-12-31";
-                case "TIME":
-                    return "23:59:59";
-                case "TIMESTAMP":
-                    return "9999-12-31T23:59:59";
-                case "INTEGER":
-                    return "0";
-                case "DECIMAL":
-                    return "0.0";
-                case "BOOLEAN":
-                    return "false";
-                case "VARCHAR":
-                    return "";
                 default:
                     return "";
             }

@@ -68,7 +68,7 @@ namespace TestvaerkstedetToolkit.Services
                             System.Diagnostics.Debug.WriteLine($"\n--- ROW {totalCount} ---");
                         }
 
-                        // KORREKT APPROACH: Læs row som string først, parse bagefter
+                        // Læs row som string først, parse bagefter
                         string rowXml = reader.ReadOuterXml();
 
                         // Parse med XDocument for SIKKER kolonnetilgang

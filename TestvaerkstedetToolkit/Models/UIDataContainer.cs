@@ -24,7 +24,7 @@ namespace TestvaerkstedetToolkit.Models
         /// </summary>
         public PrimaryKeyInfo PrimaryKey { get; set; } = new PrimaryKeyInfo();
 
-        // BACKWARD COMPATIBILITY PROPERTIES - deprecated men bevaret til eksisterende kode
+        // deprecated men bevaret til eksisterende kode
         [Obsolete("Brug PrimaryKey.GetAllPrimaryKeyColumns()[0] i stedet")]
         public string PrimaryKeyName
         {

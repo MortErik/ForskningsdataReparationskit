@@ -31,7 +31,7 @@ namespace TestvaerkstedetToolkit.Services
             // ENKELT foreach - brug KUN AllColumns som source of truth
             foreach (var xmlColumn in uiData.AllColumns.OrderBy(c => c.Position))
             {
-                // Convert XMLColumn til TableIndexColumn for backward compatibility
+                // Convert XMLColumn til TableIndexColumn
                 var tableColumn = new TableIndexColumn
                 {
                     Name = xmlColumn.Name,
