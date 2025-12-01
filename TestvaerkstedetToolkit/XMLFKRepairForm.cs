@@ -84,6 +84,10 @@ namespace TestvaerkstedetToolkit
         private List<XmlColumnInfo> currentParentXmlColumns = null;
         private List<XmlColumnInfo> currentChildXmlColumns = null;
 
+        // Custom output path (null = brug Desktop default)
+        private string customOutputPath = null;
+        private const string OUTPUT_FOLDER_NAME = "XML_FK_Repairs";
+
         #endregion
 
         #region Constructor
@@ -92,6 +96,18 @@ namespace TestvaerkstedetToolkit
         {
             InitializeComponent();
             SetupXmlListBoxContextMenu();
+
+            // Tilføj Load event handler
+            this.Load += XMLFKRepairForm_Load;
+        }
+
+        /// <summary>
+        /// Form Load event - kaldes EFTER WelcomeForm har tilføjet backPanel
+        /// </summary>
+        private void XMLFKRepairForm_Load(object sender, EventArgs e)
+        {
+            AddOutputControlsToBackPanel();
+            UpdateOutputPathLabel();
         }
 
         #endregion
@@ -1261,13 +1277,17 @@ namespace TestvaerkstedetToolkit
             }
         }
 
+        #endregion
+
+        #region Ouput
+
         /// <summary>
         /// Opret struktureret output directory for FK repair på Desktop
         /// </summary>
         private string CreateRepairOutputDirectory(string avidVersion, string tableName)
         {
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string parentFolder = Path.Combine(desktopPath, "XML_FK_Repairs");
+            string basePath = GetOutputBasePath();
+            string parentFolder = Path.Combine(basePath, OUTPUT_FOLDER_NAME);
 
             // Opret parent folder hvis den ikke findes
             Directory.CreateDirectory(parentFolder);
@@ -1297,6 +1317,81 @@ namespace TestvaerkstedetToolkit
             Directory.CreateDirectory(outputDirectory);
 
             return outputDirectory;
+        }
+
+        /// <summary>
+        /// Button handler: Vælg custom output directory
+        /// </summary>
+        private void btnChangeOutput_Click(object sender, EventArgs e)
+        {
+            using (var folderDialog = new FolderBrowserDialog())
+            {
+                folderDialog.Description = "Vælg output mappe for XML FK repairs";
+                folderDialog.SelectedPath = customOutputPath ??
+                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+                if (folderDialog.ShowDialog() == DialogResult.OK)
+                {
+                    customOutputPath = folderDialog.SelectedPath;
+                    UpdateOutputPathLabel();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Opdater output path label baseret på nuværende valg
+        /// </summary>
+        private void UpdateOutputPathLabel()
+        {
+            string displayPath;
+
+            if (customOutputPath != null)
+            {
+                displayPath = $"{customOutputPath}/{OUTPUT_FOLDER_NAME}";
+                lblOutputPath.ForeColor = Color.DarkBlue;
+            }
+            else
+            {
+                displayPath = $"Desktop/{OUTPUT_FOLDER_NAME}";
+                lblOutputPath.ForeColor = Color.DarkGreen;
+            }
+
+            lblOutputPath.Text = $"Output: {displayPath}";
+        }
+
+        /// <summary>
+        /// Hent base path for output (Desktop eller custom)
+        /// </summary>
+        private string GetOutputBasePath()
+        {
+            return customOutputPath ?? Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        }
+
+        /// <summary>
+        /// Tilføj output controls til eksisterende back panel (oprettet af WelcomeForm)
+        /// </summary>
+        private void AddOutputControlsToBackPanel()
+        {
+            // Find back button (oprettet af WelcomeForm.AddBackButtonWithDocking)
+            var backButton = this.Controls.Find("backButton", true).FirstOrDefault();
+
+            if (backButton != null && backButton.Parent is Panel backPanel)
+            {
+                // Fjern controls fra form (hvis de blev tilføjet)
+                this.Controls.Remove(lblOutputPath);
+                this.Controls.Remove(btnChangeOutput);
+
+                // Tilføj til back panel i stedet
+                lblOutputPath.Dock = DockStyle.None;
+                lblOutputPath.AutoSize = true;
+                lblOutputPath.Location = new Point(200, 17);
+
+                btnChangeOutput.Dock = DockStyle.Right;
+                btnChangeOutput.Margin = new Padding(0, 7, 15, 7);
+
+                backPanel.Controls.Add(lblOutputPath);
+                backPanel.Controls.Add(btnChangeOutput);
+            }
         }
 
         #endregion

@@ -69,6 +69,29 @@ namespace TestvaerkstedetToolkit
             this.lblChildXmlCol = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
+            // lblOutputPath
+            // 
+            this.lblOutputPath = new System.Windows.Forms.Label();
+            this.lblOutputPath.AutoSize = true;
+            this.lblOutputPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.lblOutputPath.ForeColor = System.Drawing.Color.DarkGreen;
+            this.lblOutputPath.Location = new System.Drawing.Point(200, 15);
+            this.lblOutputPath.Name = "lblOutputPath";
+            this.lblOutputPath.Size = new System.Drawing.Size(200, 13);
+            this.lblOutputPath.TabIndex = 200;
+            this.lblOutputPath.Text = "Output: Desktop/XML_FK_Repairs";
+            // 
+            // btnChangeOutput
+            // 
+            this.btnChangeOutput = new System.Windows.Forms.Button();
+            this.btnChangeOutput.Location = new System.Drawing.Point(750, 10);
+            this.btnChangeOutput.Name = "btnChangeOutput";
+            this.btnChangeOutput.Size = new System.Drawing.Size(110, 25);
+            this.btnChangeOutput.TabIndex = 201;
+            this.btnChangeOutput.Text = "📁 Vælg Output";
+            this.btnChangeOutput.UseVisualStyleBackColor = true;
+            this.btnChangeOutput.Click += new System.EventHandler(this.btnChangeOutput_Click);
+            // 
             // lblTableIndex
             // 
             this.lblTableIndex.AutoSize = true;
@@ -459,6 +482,8 @@ namespace TestvaerkstedetToolkit
         #endregion
 
         // Control declarations
+        private System.Windows.Forms.Label lblOutputPath;
+        private System.Windows.Forms.Button btnChangeOutput;
         private System.Windows.Forms.Label lblTableIndex;
         private System.Windows.Forms.TextBox txtTableIndex;
         private System.Windows.Forms.Button btnBrowseTableIndex;

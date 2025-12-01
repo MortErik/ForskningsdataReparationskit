@@ -55,7 +55,8 @@ namespace TestvaerkstedetToolkit.Services
         public SplitResult ExecuteSplit(
             UIDataContainer uiData,
             IProgressReporter progress = null,
-            ISplitLogger logger = null)
+            ISplitLogger logger = null,
+            string customBasePath = null)
         {
             var result = new SplitResult { StartTime = DateTime.Now };
             string tempDirectory = null;
@@ -64,8 +65,8 @@ namespace TestvaerkstedetToolkit.Services
             try
             {
                 // STEP 1: Opret temp directory
-                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                string parentFolder = Path.Combine(desktopPath, "XML_Table_Splits");
+                string basePath = customBasePath ?? Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                string parentFolder = Path.Combine(basePath, "XML_Table_Splits");
 
                 // Parse original table nummer
                 int originalTableNumber = int.Parse(Regex.Match(uiData.OriginalTableEntry.Folder, @"table(\d+)").Groups[1].Value);

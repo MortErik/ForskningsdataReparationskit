@@ -35,6 +35,10 @@ namespace TestvaerkstedetToolkit
         private TableIndexEntry currentTableEntry = null;
         private string currentTableIndexPath = "";
 
+        // Custom output path (null = brug Desktop default)
+        private string customOutputPath = null;
+        private const string OUTPUT_FOLDER_NAME = "XML_Table_Splits";
+
         private bool splitPointsHasPlaceholder = true;
         private const string PLACEHOLDER_TEXT = "Eksempel: 950, 1800, 2700 (eller lad stå tom for automatisk split)";
 
@@ -49,6 +53,18 @@ namespace TestvaerkstedetToolkit
 
             SetupSplitPointsPlaceholder();
             AddSplitPointsInfoLabel();
+
+            // Tilføj Load event handler
+            this.Load += XMLTableSplitterForm_Load;
+        }
+
+        /// <summary>
+        /// Form Load event - kaldes EFTER WelcomeForm har tilføjet backPanel
+        /// </summary>
+        private void XMLTableSplitterForm_Load(object sender, EventArgs e)
+        {
+            AddOutputControlsToBackPanel();
+            UpdateOutputPathLabel();
         }
 
         #endregion
@@ -564,7 +580,7 @@ namespace TestvaerkstedetToolkit
                 var logger = new SplitLogger();
                 var progress = new FormProgressReporter(progressBar, lblPreviewInfo);
 
-                var result = await Task.Run(() => splitService.ExecuteSplit(uiData, progress, logger));
+                var result = await Task.Run(() => splitService.ExecuteSplit(uiData, progress, logger, GetOutputBasePath()));
 
                 if (result.Success)
                 {
@@ -923,6 +939,85 @@ namespace TestvaerkstedetToolkit
                 }
             }
         }
+        #endregion
+
+        #region Output Directory Management
+
+        /// <summary>
+        /// Button handler: Vælg custom output directory
+        /// </summary>
+        private void btnChangeOutput_Click(object sender, EventArgs e)
+        {
+            using (var folderDialog = new FolderBrowserDialog())
+            {
+                folderDialog.Description = "Vælg output mappe for XML splits";
+                folderDialog.SelectedPath = customOutputPath ??
+                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+                if (folderDialog.ShowDialog() == DialogResult.OK)
+                {
+                    customOutputPath = folderDialog.SelectedPath;
+                    UpdateOutputPathLabel();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Opdater output path label baseret på nuværende valg
+        /// </summary>
+        private void UpdateOutputPathLabel()
+        {
+            string displayPath;
+
+            if (customOutputPath != null)
+            {
+                displayPath = $"{customOutputPath}/{OUTPUT_FOLDER_NAME}";
+                lblOutputPath.ForeColor = Color.DarkBlue;
+            }
+            else
+            {
+                displayPath = $"Desktop/{OUTPUT_FOLDER_NAME}";
+                lblOutputPath.ForeColor = Color.DarkGreen;
+            }
+
+            lblOutputPath.Text = $"Output: {displayPath}";
+        }
+
+        /// <summary>
+        /// Tilføj output controls til eksisterende back panel (oprettet af WelcomeForm)
+        /// </summary>
+        private void AddOutputControlsToBackPanel()
+        {
+            // Find back button (oprettet af WelcomeForm.AddBackButtonWithDocking)
+            var backButton = this.Controls.Find("backButton", true).FirstOrDefault();
+
+            if (backButton != null && backButton.Parent is Panel backPanel)
+            {
+                // Fjern controls fra form (de blev tilføjet i Designer)
+                this.Controls.Remove(lblOutputPath);
+                this.Controls.Remove(btnChangeOutput);
+
+                // Tilføj til back panel
+                lblOutputPath.Dock = DockStyle.None;
+                lblOutputPath.AutoSize = true;
+                lblOutputPath.Location = new Point(200, 17);
+
+                btnChangeOutput.Dock = DockStyle.Right;
+                btnChangeOutput.Margin = new Padding(0, 7, 15, 7);
+
+                backPanel.Controls.Add(lblOutputPath);
+                backPanel.Controls.Add(btnChangeOutput);
+            }
+        }
+
+        /// <summary>
+        /// Hent base path for output (Desktop eller custom)
+        /// </summary>
+        private string GetOutputBasePath()
+        {
+            return customOutputPath ?? Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        }
+
         #endregion
     }
 }

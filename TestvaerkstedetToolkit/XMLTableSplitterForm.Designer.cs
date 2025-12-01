@@ -51,6 +51,8 @@
             this.btnExecuteSplit = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.compositePKSelector = new TestvaerkstedetToolkit.Controls.CompositePKSelector();
+            this.lblOutputPath = new System.Windows.Forms.Label();
+            this.btnChangeOutput = new System.Windows.Forms.Button();
             this.groupBoxTableIndex.SuspendLayout();
             this.groupBoxFileSelection.SuspendLayout();
             this.groupBoxPrimaryKey.SuspendLayout();
@@ -58,6 +60,27 @@
             this.groupBoxSplitPreview.SuspendLayout();
             this.groupBoxExecution.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // lblOutputPath
+            // 
+            this.lblOutputPath.AutoSize = true;
+            this.lblOutputPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblOutputPath.ForeColor = System.Drawing.Color.DarkGreen;
+            this.lblOutputPath.Location = new System.Drawing.Point(19, 15);
+            this.lblOutputPath.Name = "lblOutputPath";
+            this.lblOutputPath.Size = new System.Drawing.Size(200, 13);
+            this.lblOutputPath.TabIndex = 100;
+            this.lblOutputPath.Text = "Output: Desktop/XML_Table_Splits";
+            // 
+            // btnChangeOutput
+            // 
+            this.btnChangeOutput.Location = new System.Drawing.Point(750, 10);
+            this.btnChangeOutput.Name = "btnChangeOutput";
+            this.btnChangeOutput.Size = new System.Drawing.Size(110, 25);
+            this.btnChangeOutput.TabIndex = 101;
+            this.btnChangeOutput.Text = "📁 Vælg Output";
+            this.btnChangeOutput.UseVisualStyleBackColor = true;
+            this.btnChangeOutput.Click += new System.EventHandler(this.btnChangeOutput_Click);
             // 
             // groupBoxTableIndex
             // 
@@ -221,8 +244,7 @@
             this.txtSplitPoints.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtSplitPoints.Size = new System.Drawing.Size(676, 40);
             this.txtSplitPoints.TabIndex = 0;
-            this.txtSplitPoints.Text = "Eksempel: 9, 18 (split efter kolonne 9 og 18)\nLad stå tom for auto-split baseret " +
-    "på PK kapacitet";
+            this.txtSplitPoints.Text = "Eksempel: 9, 18 (split efter kolonne 9 og 18)\nLad stå tom for auto-split baseret " + "på PK kapacitet";
             // 
             // lblSplitPoints
             // 
@@ -344,6 +366,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(900, 816);
+            //this.Controls.Add(this.lblOutputPath);
+            //this.Controls.Add(this.btnChangeOutput);
             this.Controls.Add(this.groupBoxTableIndex);
             this.Controls.Add(this.groupBoxFileSelection);
             this.Controls.Add(this.groupBoxPrimaryKey);
@@ -372,6 +396,11 @@
         #endregion
 
         // Controls
+        #region Output Controls
+        private System.Windows.Forms.Label lblOutputPath;
+        private System.Windows.Forms.Button btnChangeOutput;
+        #endregion
+
         #region TableIndex Integration Controls
         private System.Windows.Forms.GroupBox groupBoxTableIndex;
         private System.Windows.Forms.Button btnBrowseTableIndex;
