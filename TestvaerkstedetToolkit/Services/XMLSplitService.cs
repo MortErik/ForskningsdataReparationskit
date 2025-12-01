@@ -29,6 +29,7 @@ namespace TestvaerkstedetToolkit.Services
         void LogWarning(string message);
         void LogError(string message);
         void SaveToFile(string logPath);
+        void SaveAllLogs(string outputDirectory, string timestamp, UIDataContainer uiData);
     }
 
     /// <summary>
@@ -380,16 +381,24 @@ namespace TestvaerkstedetToolkit.Services
                 var dataColumns = table.Columns.Where(c => !pkColumns.Contains(c.Name)).ToList();
                 var pkColumnsInSplit = table.Columns.Where(c => pkColumns.Contains(c.Name)).ToList();
 
-                logger.LogInfo($"  PK Kolonner ({pkColumnsInSplit.Count}):");
+                logger.LogInfo($"  PK Kolonner ({pkColumnsInSplit.Count}) - Placering i {table.TableName}:");
                 foreach (var pkCol in pkColumnsInSplit)
                 {
-                    logger.LogInfo($"    - {pkCol.Name} ({pkCol.DataType}) - duplikeret til alle splits");
+                    string position = pkCol.Position > 0 ? $"kolonne {pkCol.ColumnID}" : "auto-genereret";
+                    logger.LogInfo($"    - {pkCol.Name} ({pkCol.DataType}) - placeret på {position}");
                 }
 
                 logger.LogInfo($"  Data Kolonner ({dataColumns.Count}):");
-                foreach (var dataCol in dataColumns)
+                logger.LogInfo($"    Fra         Til         Navn                Datatype");
+                logger.LogInfo($"    {new string('-', 60)}");
+
+                var sortedDataColumns = dataColumns.OrderBy(c => c.Position).ToList();
+                for (int i = 0; i < sortedDataColumns.Count; i++)
                 {
-                    logger.LogInfo($"    - {dataCol.ColumnID}: {dataCol.Name} ({dataCol.DataType})");
+                    var col = sortedDataColumns[i];
+                    string fromCol = col.ColumnID;
+                    string toCol = col.ColumnID; // Samme da det er per kolonne
+                    logger.LogInfo($"    {fromCol,-11} {toCol,-11} {col.Name,-19} {col.DataType}");
                 }
 
                 logger.LogInfo($"  → Total kolonner: {table.Columns.Count} ({pkColumnsInSplit.Count} PK + {dataColumns.Count} data)");
@@ -398,7 +407,7 @@ namespace TestvaerkstedetToolkit.Services
         }
 
         /// <summary>
-        /// Log operation end og gem begge log filer
+        /// Log operation end og gem alle log filer via logger
         /// </summary>
         private void LogOperationEnd(string outputDirectory, UIDataContainer uiData, ISplitLogger logger)
         {
@@ -436,161 +445,9 @@ namespace TestvaerkstedetToolkit.Services
             logger.LogInfo("            OPERATION FULDFØRT ");
             logger.LogInfo("==============================================");
 
-            // GEM TECHNICAL LOG
+            // GEM ALLE LOG FILER (delegeret til logger)
             string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            string technicalLogPath = Path.Combine(outputDirectory, $"split_operation_technical_{timestamp}.log");
-            logger.SaveToFile(technicalLogPath);
-
-            // GEM USER-FRIENDLY LOG
-            string completeLogPath = Path.Combine(outputDirectory, $"split_operation_complete_{timestamp}.log");
-            GenerateUserFriendlyLog(completeLogPath, outputDirectory, timestamp, uiData);
-        }
-
-        /// <summary>
-        /// Generer brugervenlig complete log
-        /// </summary>
-        private void GenerateUserFriendlyLog(string logPath, string outputDirectory, string timestamp, UIDataContainer uiData)
-        {
-            var log = new System.Text.StringBuilder();
-            var startTime = DateTime.Now.AddSeconds(-5); // Approksimation
-
-            log.AppendLine("═══════════════════════════════════════════════════════════════════════════");
-            log.AppendLine("                    XML TABLE SPLIT OPERATION - COMPLETE LOG");
-            log.AppendLine("═══════════════════════════════════════════════════════════════════════════");
-
-            string versionNumber = Path.GetFileName(outputDirectory).Split('_').LastOrDefault() ?? "v1.0";
-            string operationId = $"split_{uiData.OriginalTableName}_{versionNumber}_{timestamp}";
-
-            log.AppendLine($"Operation ID: {operationId}");
-            log.AppendLine($"Timestamp: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
-            log.AppendLine($"System: {Environment.MachineName} | Bruger: {Environment.UserName}");
-            log.AppendLine("───────────────────────────────────────────────────────────────────────────");
-            log.AppendLine();
-
-            // Section 1: Operation Overview
-            log.AppendLine("═══ 1. OPERATION OVERVIEW ═══");
-            log.AppendLine();
-
-            var pkInfo = uiData.PrimaryKey;
-            var pkColumns = pkInfo.GetAllPrimaryKeyColumns();
-
-            log.AppendLine($"Original Tabel:        {uiData.OriginalTableName}");
-            log.AppendLine($"Total Rækker:          {uiData.TotalRows:N0}");
-            log.AppendLine($"Total Kolonner:        {uiData.AllColumns.Count}");
-            log.AppendLine($"Split Strategi:        {uiData.Tables.Count} tabeller (maks 950 kolonner per tabel)");
-            log.AppendLine($"PK Type:               {(pkInfo.IsComposite ? "Composite" : "Single")} ({string.Join(", ", pkColumns)})");
-            log.AppendLine($"Version:               {versionNumber}");
-            log.AppendLine($"Output Mappe:          {outputDirectory}");
-            log.AppendLine();
-
-            log.AppendLine("SPLIT TABELLER:");
-            for (int i = 0; i < uiData.Tables.Count; i++)
-            {
-                var table = uiData.Tables[i];
-                var dataColumns = table.Columns.Where(c => !pkColumns.Contains(c.Name)).Count();
-                log.AppendLine($"  • {table.TableName} ({table.Columns.Count} kolonner: {pkColumns.Count} PK + {dataColumns} data)");
-            }
-            log.AppendLine();
-
-            log.AppendLine("REUNION VIEW:");
-            log.AppendLine($"  • RA_Samling_af_{uiData.OriginalTableName}");
-            log.AppendLine($"  • JOIN på: {string.Join(", ", pkColumns)}");
-            log.AppendLine();
-            log.AppendLine();
-
-            // Section 2: Status
-            log.AppendLine("═══ 2. STATUS ═══");
-            log.AppendLine();
-            log.AppendLine("Status: COMPLETED");
-            log.AppendLine("Warnings: 0");
-            log.AppendLine("Errors: 0");
-            log.AppendLine();
-            log.AppendLine();
-
-            // Section 3: Column Distribution
-            log.AppendLine("═══ 3. COLUMN DISTRIBUTION ═══");
-            log.AppendLine();
-
-            foreach (var table in uiData.Tables)
-            {
-                var dataColumns = table.Columns.Where(c => !pkColumns.Contains(c.Name)).ToList();
-
-                log.AppendLine($"{table.TableName} - {table.Columns.Count} kolonner");
-                log.AppendLine("───────────────────────────────────────────────────────────────────────────");
-
-                log.AppendLine($"  PRIMARY KEY ({pkColumns.Count} kolonner - duplikeret til alle splits):");
-                foreach (var pkCol in pkColumns)
-                {
-                    var col = table.Columns.FirstOrDefault(c => c.Name == pkCol);
-                    if (col != null)
-                        log.AppendLine($"    • {col.Name} ({col.DataType})");
-                }
-                log.AppendLine();
-
-                log.AppendLine($"  DATA KOLONNER ({dataColumns.Count}):");
-                foreach (var col in dataColumns)
-                {
-                    log.AppendLine($"    {col.ColumnID} → {col.Name} ({col.DataType})");
-                }
-                log.AppendLine();
-            }
-
-            log.AppendLine();
-
-            // Section 4: Generated Files
-            log.AppendLine("═══ 4. GENERATED FILES ═══");
-            log.AppendLine();
-
-            var generatedFiles = Directory.GetFiles(outputDirectory, "*", SearchOption.AllDirectories);
-            var xmlFiles = generatedFiles.Where(f => f.EndsWith(".xml") && !f.Contains("tableIndex")).OrderBy(f => f).ToList();
-            var tableIndexFiles = generatedFiles.Where(f => f.Contains("tableIndex")).ToList();
-
-            log.AppendLine("XML Data Filer:");
-            log.AppendLine("───────────────────────────────────────────────────────────────────────────");
-            foreach (var file in xmlFiles)
-            {
-                var fileInfo = new FileInfo(file);
-                log.AppendLine($"  {Path.GetFileName(file)}");
-                log.AppendLine($"    → Size: {fileInfo.Length:N0} bytes");
-                log.AppendLine($"    → Rows: {uiData.TotalRows:N0}");
-                log.AppendLine();
-            }
-
-            if (tableIndexFiles.Count > 0)
-            {
-                log.AppendLine("TableIndex:");
-                log.AppendLine("───────────────────────────────────────────────────────────────────────────");
-                foreach (var file in tableIndexFiles)
-                {
-                    var fileInfo = new FileInfo(file);
-                    log.AppendLine($"  {Path.GetFileName(file)}");
-                    log.AppendLine($"    → Size: {fileInfo.Length:N0} bytes");
-                    log.AppendLine($"    → Original '{uiData.OriginalTableName}' erstattet med splits");
-                    log.AppendLine($"    → Reunion view tilføjet");
-                }
-            }
-
-            log.AppendLine();
-            log.AppendLine();
-
-            // Section 5: Summary
-            log.AppendLine("═══ 5. OPERATION SUMMARY ═══");
-            log.AppendLine();
-            log.AppendLine($"STATUS: COMPLETED");
-            log.AppendLine("───────────────────────────────────────────────────────────────────────────");
-            log.AppendLine($"Tabeller genereret:    {uiData.Tables.Count} ({string.Join(", ", uiData.Tables.Select(t => t.TableName))})");
-            log.AppendLine($"Rækker per tabel:      {uiData.TotalRows:N0}");
-            log.AppendLine($"Total filer:           {generatedFiles.Length}");
-            log.AppendLine();
-            log.AppendLine($"Output lokation:");
-            log.AppendLine($"  {outputDirectory}");
-
-            log.AppendLine();
-            log.AppendLine("═══════════════════════════════════════════════════════════════════════════");
-            log.AppendLine("                              LOG AFSLUTTET");
-            log.AppendLine("═══════════════════════════════════════════════════════════════════════════");
-
-            File.WriteAllText(logPath, log.ToString(), Encoding.UTF8);
+            logger.SaveAllLogs(outputDirectory, timestamp, uiData);
         }
 
         /// <summary>
