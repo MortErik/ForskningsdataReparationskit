@@ -115,6 +115,7 @@
             this.lblCapacityValue.Size = new System.Drawing.Size(430, 75);
             this.lblCapacityValue.TabIndex = 7;
             this.lblCapacityValue.Text = "Vælg primærnøgle for beregning";
+            this.lblCapacityValue.Click += new System.EventHandler(this.lblCapacityValue_Click);
             // 
             // lblInfo
             // 

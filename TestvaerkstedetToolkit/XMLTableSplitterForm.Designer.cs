@@ -39,6 +39,7 @@
             this.lblSourceXML = new System.Windows.Forms.Label();
             this.txtSourceXML = new System.Windows.Forms.TextBox();
             this.groupBoxPrimaryKey = new System.Windows.Forms.GroupBox();
+            this.compositePKSelector = new TestvaerkstedetToolkit.Controls.CompositePKSelector();
             this.btnAnalyzePK = new System.Windows.Forms.Button();
             this.groupBoxSplitConfiguration = new System.Windows.Forms.GroupBox();
             this.txtSplitPoints = new System.Windows.Forms.TextBox();
@@ -50,7 +51,6 @@
             this.groupBoxExecution = new System.Windows.Forms.GroupBox();
             this.btnExecuteSplit = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.compositePKSelector = new TestvaerkstedetToolkit.Controls.CompositePKSelector();
             this.lblOutputPath = new System.Windows.Forms.Label();
             this.btnChangeOutput = new System.Windows.Forms.Button();
             this.groupBoxTableIndex.SuspendLayout();
@@ -60,27 +60,6 @@
             this.groupBoxSplitPreview.SuspendLayout();
             this.groupBoxExecution.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // lblOutputPath
-            // 
-            this.lblOutputPath.AutoSize = true;
-            this.lblOutputPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblOutputPath.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lblOutputPath.Location = new System.Drawing.Point(19, 15);
-            this.lblOutputPath.Name = "lblOutputPath";
-            this.lblOutputPath.Size = new System.Drawing.Size(200, 13);
-            this.lblOutputPath.TabIndex = 100;
-            this.lblOutputPath.Text = "Output: Desktop/XML_Table_Splits";
-            // 
-            // btnChangeOutput
-            // 
-            this.btnChangeOutput.Location = new System.Drawing.Point(750, 10);
-            this.btnChangeOutput.Name = "btnChangeOutput";
-            this.btnChangeOutput.Size = new System.Drawing.Size(110, 25);
-            this.btnChangeOutput.TabIndex = 101;
-            this.btnChangeOutput.Text = "📁 Vælg Output";
-            this.btnChangeOutput.UseVisualStyleBackColor = true;
-            this.btnChangeOutput.Click += new System.EventHandler(this.btnChangeOutput_Click);
             // 
             // groupBoxTableIndex
             // 
@@ -207,6 +186,17 @@
             this.groupBoxPrimaryKey.TabStop = false;
             this.groupBoxPrimaryKey.Text = "3. Primærnøgle konfiguration";
             // 
+            // compositePKSelector
+            // 
+            this.compositePKSelector.BackColor = System.Drawing.SystemColors.Control;
+            this.compositePKSelector.Location = new System.Drawing.Point(15, 20);
+            this.compositePKSelector.Margin = new System.Windows.Forms.Padding(2);
+            this.compositePKSelector.Name = "compositePKSelector";
+            this.compositePKSelector.Size = new System.Drawing.Size(686, 265);
+            this.compositePKSelector.TabIndex = 0;
+            this.compositePKSelector.PrimaryKeyChanged += new System.EventHandler(this.CompositePKSelector_PrimaryKeyChanged);
+            this.compositePKSelector.Load += new System.EventHandler(this.compositePKSelector_Load);
+            // 
             // btnAnalyzePK
             // 
             this.btnAnalyzePK.Enabled = false;
@@ -244,7 +234,8 @@
             this.txtSplitPoints.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtSplitPoints.Size = new System.Drawing.Size(676, 40);
             this.txtSplitPoints.TabIndex = 0;
-            this.txtSplitPoints.Text = "Eksempel: 9, 18 (split efter kolonne 9 og 18)\nLad stå tom for auto-split baseret " + "på PK kapacitet";
+            this.txtSplitPoints.Text = "Eksempel: 9, 18 (split efter kolonne 9 og 18)\nLad stå tom for auto-split baseret " +
+    "på PK kapacitet";
             // 
             // lblSplitPoints
             // 
@@ -270,8 +261,8 @@
             // 
             // groupBoxSplitPreview
             // 
-            this.groupBoxSplitPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.groupBoxSplitPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxSplitPreview.Controls.Add(this.lstSplitPreview);
             this.groupBoxSplitPreview.Controls.Add(this.lblPreviewInfo);
@@ -286,8 +277,8 @@
             // 
             // lstSplitPreview
             // 
-            this.lstSplitPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.lstSplitPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lstSplitPreview.Font = new System.Drawing.Font("Courier New", 9F);
             this.lstSplitPreview.ItemHeight = 15;
@@ -310,7 +301,7 @@
             // 
             // groupBoxExecution
             // 
-            this.groupBoxExecution.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.groupBoxExecution.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxExecution.Controls.Add(this.btnExecuteSplit);
             this.groupBoxExecution.Controls.Add(this.progressBar);
@@ -341,7 +332,7 @@
             // 
             // progressBar
             // 
-            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar.Location = new System.Drawing.Point(195, 16);
             this.progressBar.Margin = new System.Windows.Forms.Padding(2);
@@ -350,15 +341,26 @@
             this.progressBar.TabIndex = 1;
             this.progressBar.Visible = false;
             // 
-            // compositePKSelector
+            // lblOutputPath
             // 
-            this.compositePKSelector.BackColor = System.Drawing.SystemColors.Control;
-            this.compositePKSelector.Location = new System.Drawing.Point(15, 20);
-            this.compositePKSelector.Margin = new System.Windows.Forms.Padding(2);
-            this.compositePKSelector.Name = "compositePKSelector";
-            this.compositePKSelector.Size = new System.Drawing.Size(686, 265);
-            this.compositePKSelector.TabIndex = 0;
-            this.compositePKSelector.PrimaryKeyChanged += new System.EventHandler(this.CompositePKSelector_PrimaryKeyChanged);
+            this.lblOutputPath.AutoSize = true;
+            this.lblOutputPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblOutputPath.ForeColor = System.Drawing.Color.DarkGreen;
+            this.lblOutputPath.Location = new System.Drawing.Point(19, 15);
+            this.lblOutputPath.Name = "lblOutputPath";
+            this.lblOutputPath.Size = new System.Drawing.Size(200, 13);
+            this.lblOutputPath.TabIndex = 100;
+            this.lblOutputPath.Text = "Output destination: Desktop/XML_Table_Splits";
+            // 
+            // btnChangeOutput
+            // 
+            this.btnChangeOutput.Location = new System.Drawing.Point(750, 10);
+            this.btnChangeOutput.Name = "btnChangeOutput";
+            this.btnChangeOutput.Size = new System.Drawing.Size(110, 25);
+            this.btnChangeOutput.TabIndex = 101;
+            this.btnChangeOutput.Text = "📁 Vælg Output";
+            this.btnChangeOutput.UseVisualStyleBackColor = true;
+            this.btnChangeOutput.Click += new System.EventHandler(this.btnChangeOutput_Click);
             // 
             // XMLTableSplitterForm
             // 
@@ -366,8 +368,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(900, 816);
-            //this.Controls.Add(this.lblOutputPath);
-            //this.Controls.Add(this.btnChangeOutput);
             this.Controls.Add(this.groupBoxTableIndex);
             this.Controls.Add(this.groupBoxFileSelection);
             this.Controls.Add(this.groupBoxPrimaryKey);

@@ -79,7 +79,7 @@ namespace TestvaerkstedetToolkit
             this.lblOutputPath.Name = "lblOutputPath";
             this.lblOutputPath.Size = new System.Drawing.Size(200, 13);
             this.lblOutputPath.TabIndex = 200;
-            this.lblOutputPath.Text = "Output: Desktop/XML_FK_Repairs";
+            this.lblOutputPath.Text = "Output destination: Desktop/XML_FK_Repairs";
             // 
             // btnChangeOutput
             // 

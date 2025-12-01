@@ -980,7 +980,7 @@ namespace TestvaerkstedetToolkit
                 lblOutputPath.ForeColor = Color.DarkGreen;
             }
 
-            lblOutputPath.Text = $"Output: {displayPath}";
+            lblOutputPath.Text = $"Output destination: {displayPath}";
         }
 
         /// <summary>
@@ -1019,5 +1019,10 @@ namespace TestvaerkstedetToolkit
         }
 
         #endregion
+
+        private void compositePKSelector_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

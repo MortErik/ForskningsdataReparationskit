@@ -54,7 +54,7 @@ namespace TestvaerkstedetToolkit.Services
                 logger.AppendLine($"  Original table nummer: {originalTableNumber}");
 
                 // Opret første split element (erstatter original)
-                var firstSplitElement = CreateCompleteTableElementWithCompositePK(
+                var firstSplitElement = CreateCompleteTableElement(
                     splitTables[0],
                     splitTables,
                     ns,
@@ -77,7 +77,7 @@ namespace TestvaerkstedetToolkit.Services
                     for (int i = 1; i < splitTables.Count; i++)
                     {
                         int currentTableNumber = startingTableNumber + (i - 1);
-                        var splitElement = CreateCompleteTableElementWithCompositePK(
+                        var splitElement = CreateCompleteTableElement(
                             splitTables[i],
                             splitTables,
                             ns,
@@ -508,7 +508,7 @@ namespace TestvaerkstedetToolkit.Services
         /// <summary>
         /// Opret komplet table element med sammensat PK support
         /// </summary>
-        private XElement CreateCompleteTableElementWithCompositePK(SplitTable splitTable, List<SplitTable> allSplits, XNamespace ns, UIDataContainer uiData, int tableNumber)
+        private XElement CreateCompleteTableElement(SplitTable splitTable, List<SplitTable> allSplits, XNamespace ns, UIDataContainer uiData, int tableNumber)
         {
             var tableElement = new XElement(ns + "table");
             var pkInfo = uiData.PrimaryKey;
@@ -522,19 +522,19 @@ namespace TestvaerkstedetToolkit.Services
             tableElement.Add(new XElement(ns + "folder", $"table{tableNumber}"));
 
             // Description med sammensat PK information
-            string description = CreateCompositePKDescription(splitTable, allSplits, uiData);
+            string description = CreateDescription(splitTable, allSplits, uiData);
             tableElement.Add(new XElement(ns + "description", description));
 
             // Columns med sammensat PK logic
-            var columnsElement = CreateColumnsElementWithCompositePK(splitTable, uiData, ns);
+            var columnsElement = CreateColumnsElement(splitTable, uiData, ns);
             tableElement.Add(columnsElement);
 
             // Primary key sektion med composite support
-            var primaryKeySection = CreateCompositePrimaryKeySection(splitTable, uiData, ns);
+            var primaryKeySection = CreatePrimaryKeySection(splitTable, uiData, ns);
             tableElement.Add(primaryKeySection);
 
             // Foreign keys med cross-references
-            var foreignKeysElement = CreateForeignKeysElementWithCompositePK(splitTable, allSplits, ns, uiData);
+            var foreignKeysElement = CreateForeignKeysElement(splitTable, allSplits, ns, uiData);
             if (foreignKeysElement.HasElements)
             {
                 tableElement.Add(foreignKeysElement);
@@ -549,7 +549,7 @@ namespace TestvaerkstedetToolkit.Services
         /// <summary>
         /// Opret columns element med sammensat PK placering logik
         /// </summary>
-        private XElement CreateColumnsElementWithCompositePK(SplitTable splitTable, UIDataContainer uiData, XNamespace ns)
+        private XElement CreateColumnsElement(SplitTable splitTable, UIDataContainer uiData, XNamespace ns)
         {
             var columnsElement = new XElement(ns + "columns");
             var pkInfo = uiData.PrimaryKey;
@@ -643,7 +643,7 @@ namespace TestvaerkstedetToolkit.Services
         /// <summary>
         /// Opret composite primary key sektion
         /// </summary>
-        private XElement CreateCompositePrimaryKeySection(SplitTable splitTable, UIDataContainer uiData, XNamespace ns)
+        private XElement CreatePrimaryKeySection(SplitTable splitTable, UIDataContainer uiData, XNamespace ns)
         {
             var primaryKeySection = new XElement(ns + "primaryKey");
             var pkInfo = uiData.PrimaryKey;
@@ -676,7 +676,7 @@ namespace TestvaerkstedetToolkit.Services
         /// <summary>
         /// Opret foreign keys med sammensat PK cross-references
         /// </summary>
-        private XElement CreateForeignKeysElementWithCompositePK(SplitTable splitTable, List<SplitTable> allSplits, XNamespace ns, UIDataContainer uiData)
+        private XElement CreateForeignKeysElement(SplitTable splitTable, List<SplitTable> allSplits, XNamespace ns, UIDataContainer uiData)
         {
             var foreignKeysElement = new XElement(ns + "foreignKeys");
             var pkInfo = uiData.PrimaryKey;
@@ -707,20 +707,25 @@ namespace TestvaerkstedetToolkit.Services
                 }
             }
 
-            // 2. CROSS-REFERENCE FOREIGN KEYS mellem split tabeller (sammensat)
-            if (allSplits.Count > 1)
+            // 2. CROSS-REFERENCE FOREIGN KEYS mellem split tabeller
+            if (allSplits.Count > 1 && splitTable.SplitIndex < allSplits.Count)
             {
-                foreach (var otherSplit in allSplits.Where(s => s.SplitIndex != splitTable.SplitIndex))
+                // Find næste split i kæden
+                var nextSplit = allSplits.FirstOrDefault(s => s.SplitIndex == splitTable.SplitIndex + 1);
+
+                if (nextSplit != null)
                 {
-                    // Opret ÉN sammensat FK med alle PK kolonner
+                    // Opret ÉN sammensat FK med alle PK kolonner til næste split
                     var crossRefFK = new XElement(ns + "foreignKey");
 
-                    string currentTableName = $"{uiData.OriginalTableEntry.Name}_{splitTable.SplitIndex}";
-                    string otherTableName = $"{uiData.OriginalTableEntry.Name}_{otherSplit.SplitIndex}";
-                    string fkName = $"FK_{currentTableName}_{otherTableName}";
+                    string currentTableName = splitTable.SplitIndex == 1 ?
+                        uiData.OriginalTableEntry.Name :
+                        $"{uiData.OriginalTableEntry.Name}_{splitTable.SplitIndex}";
+                    string nextTableName = $"{uiData.OriginalTableEntry.Name}_{nextSplit.SplitIndex}";
+                    string fkName = $"FK_{currentTableName}_to_next";
 
                     crossRefFK.Add(new XElement(ns + "name", fkName));
-                    crossRefFK.Add(new XElement(ns + "referencedTable", otherTableName));
+                    crossRefFK.Add(new XElement(ns + "referencedTable", nextTableName));
 
                     // Tilføj ALLE PK kolonner som references i SAMME FK
                     foreach (var pkColumn in pkColumns)
@@ -741,7 +746,7 @@ namespace TestvaerkstedetToolkit.Services
         /// <summary>
         /// Opret beskrivelse med sammensat PK information
         /// </summary>
-        private string CreateCompositePKDescription(SplitTable splitTable, List<SplitTable> allSplits, UIDataContainer uiData)
+        private string CreateDescription(SplitTable splitTable, List<SplitTable> allSplits, UIDataContainer uiData)
         {
             string originalDescription = uiData.OriginalTableEntry.Description ?? "";
             var pkInfo = uiData.PrimaryKey;
@@ -752,11 +757,10 @@ namespace TestvaerkstedetToolkit.Services
             int startColumn = splitTable.StartColumn;
             int endColumn = splitTable.EndColumn;
 
-            // Find andre split-tabeller til kobling
-            var otherSplits = allSplits.Where(s => s.SplitIndex != splitTable.SplitIndex)
-                .Select(s => $"{uiData.OriginalTableEntry.Name}_{s.SplitIndex}")
-                .ToList();
-            string otherSplitNames = string.Join(", ", otherSplits);
+            // Find næste split i kæden (chain topology)
+            string nextSplitName = splitTable.SplitIndex < allSplits.Count
+                ? $"{uiData.OriginalTableEntry.Name}_{splitTable.SplitIndex + 1}"
+                : null;
 
             string splitInfo;
             string archiveContext = "Denne tabel er opdelt af Rigsarkivet i forbindelse med behandling af arkiveringsversionen for at overholde tekniske begrænsninger i relationelle databasesystemer (maksimalt 1000 kolonner per tabel). Se kontekstdokumentation for mere information om opdelingen og datasammenhæng.";
@@ -764,19 +768,22 @@ namespace TestvaerkstedetToolkit.Services
             if (splitTable.SplitIndex == 1)
             {
                 splitInfo = $"Del 1 af {allSplits.Count}: Indeholder kolonnerne {startColumn}-{endColumn} fra tabellen {uiData.OriginalTableEntry.Name} samt primærnøgle ({pkDescription}) til datakobling. " +
-                           $"For at rekonstruere den komplette tabel skal denne kobles med {otherSplitNames} via primærnøglekolonne(r): {pkDescription}. " +
+                           $"Denne split er koblet til næste split ({nextSplitName}) via fremmednøgle. " +
+                           $"For at rekonstruere den komplette tabel skal alle {allSplits.Count} splits kobles i kæde via primærnøglekolonne(r): {pkDescription}. " +
                            $"XML kolonneinterval: c{startColumn}-c{endColumn}.";
             }
             else if (splitTable.SplitIndex == allSplits.Count)
             {
                 splitInfo = $"Del {splitTable.SplitIndex} af {allSplits.Count} (afsluttende): Indeholder kolonnerne {startColumn}-{endColumn} fra tabellen {uiData.OriginalTableEntry.Name} samt primærnøgle ({pkDescription}) til datakobling. " +
-                           $"For at rekonstruere den komplette tabel skal denne kobles med {otherSplitNames} via primærnøglekolonne(r): {pkDescription}. " +
+                           $"Dette er den sidste split i kæden (ingen udgående fremmednøgle). " +
+                           $"For at rekonstruere den komplette tabel skal alle {allSplits.Count} splits kobles i kæde via primærnøglekolonne(r): {pkDescription}. " +
                            $"XML kolonneinterval: c{startColumn}-c{endColumn}.";
             }
             else
             {
                 splitInfo = $"Del {splitTable.SplitIndex} af {allSplits.Count}: Indeholder kolonnerne {startColumn}-{endColumn} fra tabellen {uiData.OriginalTableEntry.Name} samt primærnøgle ({pkDescription}) til datakobling. " +
-                           $"For at rekonstruere den komplette tabel skal denne kobles med {otherSplitNames} via primærnøglekolonne(r): {pkDescription}. " +
+                           $"Denne split er koblet til næste split ({nextSplitName}) via fremmednøgle. " +
+                           $"For at rekonstruere den komplette tabel skal alle {allSplits.Count} splits kobles i kæde via primærnøglekolonne(r): {pkDescription}. " +
                            $"XML kolonneinterval: c{startColumn}-c{endColumn}.";
             }
 

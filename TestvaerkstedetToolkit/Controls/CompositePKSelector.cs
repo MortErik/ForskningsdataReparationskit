@@ -201,13 +201,15 @@ namespace TestvaerkstedetToolkit.Controls
                 if (tableRequiresSplit || totalTableColumns == 0)
                 {
                     lblCapacityValue.Text = $"Split kapacitet: {availableDataColumns} data-kolonner per tabel. " +
-                                           $"Primærnøglen ({pkColumns[0]}) duplikeres til alle split tabeller.";
+                                           $"Primærnøglen duplikeres til hver split. " +
+                                           $"Fremmednøgle relationer oprettes mellem splits i tableIndex.xml for at bevare datasammenhæng.";
                     lblCapacityValue.ForeColor = Color.DarkGreen;
                 }
                 else
                 {
                     lblCapacityValue.Text = $"Tabel har {totalTableColumns} kolonner total. " +
-                                           $"Primærnøglen ({pkColumns[0]}) duplikeres til alle split tabeller.";
+                                           $"Ved split duplikeres primærnøglen til hver split, " +
+                                           $"og fremmednøgle relationer oprettes mellem splits i tableIndex.xml for at bevare datasammenhæng.";
                     lblCapacityValue.ForeColor = Color.DarkGreen;
                 }
             }
@@ -219,12 +221,14 @@ namespace TestvaerkstedetToolkit.Controls
                 if (tableRequiresSplit || totalTableColumns == 0)
                 {
                     lblCapacityValue.Text = $"Split kapacitet: {availableDataColumns} data-kolonner per tabel. " +
-                                           $"Alle {totalPKColumns} primærnøgle komponenter duplikeres til hver split tabel.";
+                                           $"Alle {totalPKColumns} primærnøgle komponenter duplikeres til hver split. " +
+                                           $"Fremmednøgle relationer oprettes mellem splits i tableIndex.xml for at bevare datasammenhæng.";
                 }
                 else
                 {
                     lblCapacityValue.Text = $"Tabel har {totalTableColumns} kolonner total. " +
-                                           $"Alle {totalPKColumns} primærnøgle komponenter duplikeres til hver split tabel.";
+                                           $"Ved split duplikeres alle {totalPKColumns} primærnøgle komponenter til hver split, " +
+                                           $"og fremmednøgle relationer oprettes mellem splits i tableIndex.xml for at bevare datasammenhæng.";
                 }
 
                 // Farve baseret på tilgængelig kapacitet
@@ -266,6 +270,11 @@ namespace TestvaerkstedetToolkit.Controls
                 return "Mindst én primærnøgle skal vælges (eksisterende kolonne eller auto-genereret).";
 
             return "";
+        }
+
+        private void lblCapacityValue_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
