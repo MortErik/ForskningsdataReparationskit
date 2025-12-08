@@ -49,6 +49,7 @@ namespace TestvaerkstedetToolkit
         public XMLTableSplitterForm()
         {
             InitializeComponent();
+            LoadOutputPathPreference();
             // compositePKSelector er allerede initialiseret i Designer
 
             SetupSplitPointsPlaceholder();
@@ -958,6 +959,10 @@ namespace TestvaerkstedetToolkit
                 {
                     customOutputPath = folderDialog.SelectedPath;
                     UpdateOutputPathLabel();
+
+                    // TILFØJ disse 2 linjer:
+                    Properties.Settings.Default.TableSplitterOutputPath = customOutputPath;
+                    Properties.Settings.Default.Save();
                 }
             }
         }
@@ -1023,6 +1028,14 @@ namespace TestvaerkstedetToolkit
         private void compositePKSelector_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void LoadOutputPathPreference()
+        {
+            string savedPath = Properties.Settings.Default.TableSplitterOutputPath;
+            if (!string.IsNullOrEmpty(savedPath) && Directory.Exists(savedPath))
+                customOutputPath = savedPath;
+            UpdateOutputPathLabel();
         }
     }
 }

@@ -95,6 +95,7 @@ namespace TestvaerkstedetToolkit
         public XMLFKRepairForm()
         {
             InitializeComponent();
+            LoadOutputPathPreference();
             SetupXmlListBoxContextMenu();
 
             // Tilføj Load event handler
@@ -1327,7 +1328,7 @@ namespace TestvaerkstedetToolkit
         {
             using (var folderDialog = new FolderBrowserDialog())
             {
-                folderDialog.Description = "Vælg output mappe for XML FK repairs";
+                folderDialog.Description = "Vælg output mappe for FK repairs";
                 folderDialog.SelectedPath = customOutputPath ??
                     Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
@@ -1335,6 +1336,9 @@ namespace TestvaerkstedetToolkit
                 {
                     customOutputPath = folderDialog.SelectedPath;
                     UpdateOutputPathLabel();
+
+                    Properties.Settings.Default.XMLFKRepairOutputPath = customOutputPath;
+                    Properties.Settings.Default.Save();
                 }
             }
         }
@@ -1393,6 +1397,14 @@ namespace TestvaerkstedetToolkit
                 backPanel.Controls.Add(lblOutputPath);
                 backPanel.Controls.Add(btnChangeOutput);
             }
+        }
+
+        private void LoadOutputPathPreference()
+        {
+            string savedPath = Properties.Settings.Default.XMLFKRepairOutputPath;
+            if (!string.IsNullOrEmpty(savedPath) && Directory.Exists(savedPath))
+                customOutputPath = savedPath;
+            UpdateOutputPathLabel();
         }
 
         #endregion

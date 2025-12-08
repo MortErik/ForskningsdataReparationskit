@@ -6,7 +6,6 @@
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>TestvaerkstedetToolkit</RootNamespace>
     <AssemblyName>TestvaerkstedetToolkit</AssemblyName>
-	<ApplicationManifest>app.manifest</ApplicationManifest>
     
     <!-- Disable nullable warnings initially for easier migration -->
     <Nullable>disable</Nullable>
@@ -23,6 +22,14 @@
     <!-- Platform target -->
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
 
   <!-- All .cs files are automatically included with SDK-style projects -->
   <!-- All .resx files are automatically linked to their corresponding .cs files -->
@@ -47,6 +54,12 @@
     <EmbeddedResource Update="WelcomeForm.resx">
       <DependentUpon>WelcomeForm.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>
