@@ -157,7 +157,6 @@ namespace TestvaerkstedetToolkit.Services
             html.AppendLine("        <div class=\"header-info\">");
             html.AppendLine($"            <div class=\"info-row\"><span class=\"label\">Operation ID:</span> {operationId}</div>");
             html.AppendLine($"            <div class=\"info-row\"><span class=\"label\">Timestamp:</span> {DateTime.Now:yyyy-MM-dd HH:mm:ss}</div>");
-            html.AppendLine($"            <div class=\"info-row\"><span class=\"label\">System:</span> {Environment.MachineName} | <span class=\"label\">Bruger:</span> {Environment.UserName}</div>");
             html.AppendLine("        </div>");
 
             // Section 1: Operation Overview
@@ -169,8 +168,6 @@ namespace TestvaerkstedetToolkit.Services
             html.AppendLine($"            <tr><td>Total Kolonner</td><td>{uiData.AllColumns.Count}</td></tr>");
             html.AppendLine($"            <tr><td>Split Strategi</td><td>{uiData.Tables.Count} tabeller (maks 950 kolonner per tabel)</td></tr>");
             html.AppendLine($"            <tr><td>PK Type</td><td>{(pkInfo.IsComposite ? "Composite" : "Single")} ({string.Join(", ", pkColumns)})</td></tr>");
-            html.AppendLine($"            <tr><td>Version</td><td>{versionNumber}</td></tr>");
-            html.AppendLine($"            <tr><td>Output Mappe</td><td>{outputDirectory}</td></tr>");
             html.AppendLine("        </table>");
 
             html.AppendLine("        <h3>Split Tabeller</h3>");
@@ -196,9 +193,6 @@ namespace TestvaerkstedetToolkit.Services
             html.AppendLine("            <div>Warnings: 0</div>");
             html.AppendLine("            <div>Errors: 0</div>");
             html.AppendLine("        </div>");
-
-            // Section 3: Column Distribution
-            html.AppendLine("        <h2>3. Column Distribution</h2>");
 
             // Section 3: Column Distribution
             html.AppendLine("        <h2>3. Column Distribution</h2>");
