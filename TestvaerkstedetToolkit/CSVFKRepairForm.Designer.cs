@@ -31,292 +31,287 @@ namespace TestvaerkstedetToolkit
         /// </summary>
         private void InitializeComponent()
         {
-            this.labelParentCSV = new System.Windows.Forms.Label();
-            this.txtParentCSV = new System.Windows.Forms.TextBox();
-            this.btnBrowseParent = new System.Windows.Forms.Button();
-            this.labelChildCSV = new System.Windows.Forms.Label();
-            this.txtChildCSV = new System.Windows.Forms.TextBox();
-            this.btnBrowseChild = new System.Windows.Forms.Button();
-            this.labelParentCol = new System.Windows.Forms.Label();
-            this.cmbParentColumn = new System.Windows.Forms.ComboBox();
-            this.labelChildCol = new System.Windows.Forms.Label();
-            this.cmbChildColumn = new System.Windows.Forms.ComboBox();
-            this.btnAnalyzeFK = new System.Windows.Forms.Button();
-            this.btnAddPrimaryKey = new System.Windows.Forms.Button();
-            this.btnRemovePrimaryKey = new System.Windows.Forms.Button();
-            this.pnlDynamicColumns = new System.Windows.Forms.Panel();
-            this.labelDummyText = new System.Windows.Forms.Label();
-            this.txtDummyText = new System.Windows.Forms.TextBox();
-            this.labelMissingValues = new System.Windows.Forms.Label();
-            this.lstMissingValues = new System.Windows.Forms.ListBox();
-            this.lblFKStats = new System.Windows.Forms.Label();
-            this.btnGenerateDummies = new System.Windows.Forms.Button();
-            this.btnExportMissing = new System.Windows.Forms.Button();
-            this.btnCopySelected = new System.Windows.Forms.Button();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.SuspendLayout();
+            labelParentCSV = new Label();
+            txtParentCSV = new TextBox();
+            btnBrowseParent = new Button();
+            labelChildCSV = new Label();
+            txtChildCSV = new TextBox();
+            btnBrowseChild = new Button();
+            labelParentCol = new Label();
+            cmbParentColumn = new ComboBox();
+            labelChildCol = new Label();
+            cmbChildColumn = new ComboBox();
+            btnAnalyzeFK = new Button();
+            btnAddPrimaryKey = new Button();
+            btnRemovePrimaryKey = new Button();
+            pnlDynamicColumns = new Panel();
+            labelDummyText = new Label();
+            txtDummyText = new TextBox();
+            labelMissingValues = new Label();
+            lstMissingValues = new ListBox();
+            lblFKStats = new Label();
+            btnGenerateDummies = new Button();
+            btnExportMissing = new Button();
+            btnCopySelected = new Button();
+            progressBar1 = new ProgressBar();
+            openFileDialog1 = new OpenFileDialog();
+            saveFileDialog1 = new SaveFileDialog();
+            SuspendLayout();
             // 
             // labelParentCSV
             // 
-            this.labelParentCSV.AutoSize = true;
-            this.labelParentCSV.Location = new System.Drawing.Point(20, 75);
-            this.labelParentCSV.Name = "labelParentCSV";
-            this.labelParentCSV.Size = new System.Drawing.Size(65, 13);
-            this.labelParentCSV.TabIndex = 0;
-            this.labelParentCSV.Text = "Parent CSV:";
+            labelParentCSV.AutoSize = true;
+            labelParentCSV.Location = new Point(25, 75);
+            labelParentCSV.Name = "labelParentCSV";
+            labelParentCSV.Size = new Size(68, 15);
+            labelParentCSV.TabIndex = 0;
+            labelParentCSV.Text = "Parent CSV:";
             // 
             // txtParentCSV
             // 
-            this.txtParentCSV.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtParentCSV.Location = new System.Drawing.Point(130, 72);
-            this.txtParentCSV.Name = "txtParentCSV";
-            this.txtParentCSV.Size = new System.Drawing.Size(920, 20);
-            this.txtParentCSV.TabIndex = 1;
+            txtParentCSV.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtParentCSV.Location = new Point(130, 72);
+            txtParentCSV.Name = "txtParentCSV";
+            txtParentCSV.Size = new Size(920, 23);
+            txtParentCSV.TabIndex = 1;
             // 
             // btnBrowseParent
             // 
-            this.btnBrowseParent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBrowseParent.Location = new System.Drawing.Point(1070, 70);
-            this.btnBrowseParent.Name = "btnBrowseParent";
-            this.btnBrowseParent.Size = new System.Drawing.Size(75, 23);
-            this.btnBrowseParent.TabIndex = 2;
-            this.btnBrowseParent.Text = "Browse...";
-            this.btnBrowseParent.UseVisualStyleBackColor = true;
+            btnBrowseParent.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnBrowseParent.Location = new Point(1070, 70);
+            btnBrowseParent.Name = "btnBrowseParent";
+            btnBrowseParent.Size = new Size(75, 23);
+            btnBrowseParent.TabIndex = 2;
+            btnBrowseParent.Text = "Browse...";
+            btnBrowseParent.UseVisualStyleBackColor = true;
             // 
             // labelChildCSV
             // 
-            this.labelChildCSV.AutoSize = true;
-            this.labelChildCSV.Location = new System.Drawing.Point(20, 105);
-            this.labelChildCSV.Name = "labelChildCSV";
-            this.labelChildCSV.Size = new System.Drawing.Size(57, 13);
-            this.labelChildCSV.TabIndex = 0;
-            this.labelChildCSV.Text = "Child CSV:";
+            labelChildCSV.AutoSize = true;
+            labelChildCSV.Location = new Point(25, 105);
+            labelChildCSV.Name = "labelChildCSV";
+            labelChildCSV.Size = new Size(62, 15);
+            labelChildCSV.TabIndex = 0;
+            labelChildCSV.Text = "Child CSV:";
             // 
             // txtChildCSV
             // 
-            this.txtChildCSV.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtChildCSV.Location = new System.Drawing.Point(130, 102);
-            this.txtChildCSV.Name = "txtChildCSV";
-            this.txtChildCSV.Size = new System.Drawing.Size(920, 20);
-            this.txtChildCSV.TabIndex = 1;
+            txtChildCSV.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtChildCSV.Location = new Point(130, 102);
+            txtChildCSV.Name = "txtChildCSV";
+            txtChildCSV.Size = new Size(920, 23);
+            txtChildCSV.TabIndex = 1;
             // 
             // btnBrowseChild
             // 
-            this.btnBrowseChild.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBrowseChild.Location = new System.Drawing.Point(1070, 100);
-            this.btnBrowseChild.Name = "btnBrowseChild";
-            this.btnBrowseChild.Size = new System.Drawing.Size(75, 23);
-            this.btnBrowseChild.TabIndex = 2;
-            this.btnBrowseChild.Text = "Browse...";
-            this.btnBrowseChild.UseVisualStyleBackColor = true;
+            btnBrowseChild.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnBrowseChild.Location = new Point(1070, 100);
+            btnBrowseChild.Name = "btnBrowseChild";
+            btnBrowseChild.Size = new Size(75, 23);
+            btnBrowseChild.TabIndex = 2;
+            btnBrowseChild.Text = "Browse...";
+            btnBrowseChild.UseVisualStyleBackColor = true;
             // 
             // labelParentCol
             // 
-            this.labelParentCol.AutoSize = true;
-            this.labelParentCol.Location = new System.Drawing.Point(20, 145);
-            this.labelParentCol.Name = "labelParentCol";
-            this.labelParentCol.Size = new System.Drawing.Size(88, 13);
-            this.labelParentCol.TabIndex = 0;
-            this.labelParentCol.Text = "Parent Column 1:";
+            labelParentCol.AutoSize = true;
+            labelParentCol.Location = new Point(25, 145);
+            labelParentCol.Name = "labelParentCol";
+            labelParentCol.Size = new Size(99, 15);
+            labelParentCol.TabIndex = 0;
+            labelParentCol.Text = "Parent Column 1:";
             // 
             // cmbParentColumn
             // 
-            this.cmbParentColumn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbParentColumn.Location = new System.Drawing.Point(130, 142);
-            this.cmbParentColumn.Name = "cmbParentColumn";
-            this.cmbParentColumn.Size = new System.Drawing.Size(300, 21);
-            this.cmbParentColumn.TabIndex = 3;
+            cmbParentColumn.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbParentColumn.Location = new Point(130, 142);
+            cmbParentColumn.Name = "cmbParentColumn";
+            cmbParentColumn.Size = new Size(300, 23);
+            cmbParentColumn.TabIndex = 3;
             // 
             // labelChildCol
             // 
-            this.labelChildCol.AutoSize = true;
-            this.labelChildCol.Location = new System.Drawing.Point(450, 145);
-            this.labelChildCol.Name = "labelChildCol";
-            this.labelChildCol.Size = new System.Drawing.Size(80, 13);
-            this.labelChildCol.TabIndex = 0;
-            this.labelChildCol.Text = "Child Column 1:";
+            labelChildCol.AutoSize = true;
+            labelChildCol.Location = new Point(451, 145);
+            labelChildCol.Name = "labelChildCol";
+            labelChildCol.Size = new Size(93, 15);
+            labelChildCol.TabIndex = 0;
+            labelChildCol.Text = "Child Column 1:";
             // 
             // cmbChildColumn
             // 
-            this.cmbChildColumn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbChildColumn.Location = new System.Drawing.Point(550, 142);
-            this.cmbChildColumn.Name = "cmbChildColumn";
-            this.cmbChildColumn.Size = new System.Drawing.Size(300, 21);
-            this.cmbChildColumn.TabIndex = 4;
+            cmbChildColumn.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbChildColumn.Location = new Point(564, 142);
+            cmbChildColumn.Name = "cmbChildColumn";
+            cmbChildColumn.Size = new Size(300, 23);
+            cmbChildColumn.TabIndex = 4;
             // 
             // btnAnalyzeFK
             // 
-            this.btnAnalyzeFK.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.btnAnalyzeFK.Location = new System.Drawing.Point(130, 340);
-            this.btnAnalyzeFK.Name = "btnAnalyzeFK";
-            this.btnAnalyzeFK.Size = new System.Drawing.Size(150, 30);
-            this.btnAnalyzeFK.TabIndex = 8;
-            this.btnAnalyzeFK.Text = "Analyze FK";
-            this.btnAnalyzeFK.UseVisualStyleBackColor = true;
+            btnAnalyzeFK.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold);
+            btnAnalyzeFK.Location = new Point(130, 340);
+            btnAnalyzeFK.Name = "btnAnalyzeFK";
+            btnAnalyzeFK.Size = new Size(150, 30);
+            btnAnalyzeFK.TabIndex = 8;
+            btnAnalyzeFK.Text = "Analyze FK";
+            btnAnalyzeFK.UseVisualStyleBackColor = true;
             // 
             // btnAddPrimaryKey
             // 
-            this.btnAddPrimaryKey.Location = new System.Drawing.Point(130, 175);
-            this.btnAddPrimaryKey.Name = "btnAddPrimaryKey";
-            this.btnAddPrimaryKey.Size = new System.Drawing.Size(100, 23);
-            this.btnAddPrimaryKey.TabIndex = 5;
-            this.btnAddPrimaryKey.Text = "Add Column";
-            this.btnAddPrimaryKey.UseVisualStyleBackColor = true;
+            btnAddPrimaryKey.Location = new Point(130, 175);
+            btnAddPrimaryKey.Name = "btnAddPrimaryKey";
+            btnAddPrimaryKey.Size = new Size(100, 23);
+            btnAddPrimaryKey.TabIndex = 5;
+            btnAddPrimaryKey.Text = "Add Column";
+            btnAddPrimaryKey.UseVisualStyleBackColor = true;
             // 
             // btnRemovePrimaryKey
             // 
-            this.btnRemovePrimaryKey.Enabled = false;
-            this.btnRemovePrimaryKey.Location = new System.Drawing.Point(240, 175);
-            this.btnRemovePrimaryKey.Name = "btnRemovePrimaryKey";
-            this.btnRemovePrimaryKey.Size = new System.Drawing.Size(100, 23);
-            this.btnRemovePrimaryKey.TabIndex = 6;
-            this.btnRemovePrimaryKey.Text = "Remove Last";
-            this.btnRemovePrimaryKey.UseVisualStyleBackColor = true;
+            btnRemovePrimaryKey.Enabled = false;
+            btnRemovePrimaryKey.Location = new Point(240, 175);
+            btnRemovePrimaryKey.Name = "btnRemovePrimaryKey";
+            btnRemovePrimaryKey.Size = new Size(100, 23);
+            btnRemovePrimaryKey.TabIndex = 6;
+            btnRemovePrimaryKey.Text = "Remove Last";
+            btnRemovePrimaryKey.UseVisualStyleBackColor = true;
             // 
             // pnlDynamicColumns
             // 
-            this.pnlDynamicColumns.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlDynamicColumns.AutoScroll = true;
-            this.pnlDynamicColumns.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlDynamicColumns.Location = new System.Drawing.Point(130, 205);
-            this.pnlDynamicColumns.Name = "pnlDynamicColumns";
-            this.pnlDynamicColumns.Size = new System.Drawing.Size(900, 120);
-            this.pnlDynamicColumns.TabIndex = 7;
+            pnlDynamicColumns.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            pnlDynamicColumns.AutoScroll = true;
+            pnlDynamicColumns.BorderStyle = BorderStyle.FixedSingle;
+            pnlDynamicColumns.Location = new Point(130, 205);
+            pnlDynamicColumns.Name = "pnlDynamicColumns";
+            pnlDynamicColumns.Size = new Size(900, 120);
+            pnlDynamicColumns.TabIndex = 7;
             // 
             // labelDummyText
             // 
-            this.labelDummyText.AutoSize = true;
-            this.labelDummyText.Location = new System.Drawing.Point(20, 385);
-            this.labelDummyText.Name = "labelDummyText";
-            this.labelDummyText.Size = new System.Drawing.Size(71, 13);
-            this.labelDummyText.TabIndex = 0;
-            this.labelDummyText.Text = "Dummy tekst:";
+            labelDummyText.AutoSize = true;
+            labelDummyText.Location = new Point(25, 385);
+            labelDummyText.Name = "labelDummyText";
+            labelDummyText.Size = new Size(81, 15);
+            labelDummyText.TabIndex = 0;
+            labelDummyText.Text = "Dummy tekst:";
+            labelDummyText.Click += labelDummyText_Click;
             // 
             // txtDummyText
             // 
-            this.txtDummyText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtDummyText.Location = new System.Drawing.Point(130, 382);
-            this.txtDummyText.Name = "txtDummyText";
-            this.txtDummyText.Size = new System.Drawing.Size(900, 20);
-            this.txtDummyText.TabIndex = 9;
-            this.txtDummyText.Text = "Betydning ukendt. Rækken er tilføjet under aflevering til arkiv, for at sikre ref" +
-    "erentiel integritet i databasen af hensyn til langtidsbevaring";
+            txtDummyText.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtDummyText.Location = new Point(130, 382);
+            txtDummyText.Multiline = true;
+            txtDummyText.Name = "txtDummyText";
+            txtDummyText.Size = new Size(900, 51);
+            txtDummyText.TabIndex = 9;
+            txtDummyText.Text = "Betydning ukendt. Rækken er tilføjet under aflevering til arkiv, for at sikre referentiel integritet i databasen af hensyn til langtidsbevaring";
             // 
             // labelMissingValues
             // 
-            this.labelMissingValues.AutoSize = true;
-            this.labelMissingValues.Location = new System.Drawing.Point(20, 420);
-            this.labelMissingValues.Name = "labelMissingValues";
-            this.labelMissingValues.Size = new System.Drawing.Size(102, 13);
-            this.labelMissingValues.TabIndex = 0;
-            this.labelMissingValues.Text = "Manglende værdier:";
+            labelMissingValues.AutoSize = true;
+            labelMissingValues.Location = new Point(12, 450);
+            labelMissingValues.Name = "labelMissingValues";
+            labelMissingValues.Size = new Size(113, 15);
+            labelMissingValues.TabIndex = 0;
+            labelMissingValues.Text = "Manglende værdier:";
             // 
             // lstMissingValues
             // 
-            this.lstMissingValues.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lstMissingValues.Location = new System.Drawing.Point(130, 420);
-            this.lstMissingValues.Name = "lstMissingValues";
-            this.lstMissingValues.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lstMissingValues.Size = new System.Drawing.Size(700, 238);
-            this.lstMissingValues.TabIndex = 10;
+            lstMissingValues.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lstMissingValues.ItemHeight = 15;
+            lstMissingValues.Location = new Point(130, 450);
+            lstMissingValues.Name = "lstMissingValues";
+            lstMissingValues.SelectionMode = SelectionMode.MultiExtended;
+            lstMissingValues.Size = new Size(700, 199);
+            lstMissingValues.TabIndex = 10;
             // 
             // lblFKStats
             // 
-            this.lblFKStats.AutoSize = true;
-            this.lblFKStats.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblFKStats.Location = new System.Drawing.Point(300, 350);
-            this.lblFKStats.Name = "lblFKStats";
-            this.lblFKStats.Size = new System.Drawing.Size(140, 13);
-            this.lblFKStats.TabIndex = 0;
-            this.lblFKStats.Text = "Klik \'Analyze FK\' for at starte";
+            lblFKStats.AutoSize = true;
+            lblFKStats.ForeColor = Color.DarkBlue;
+            lblFKStats.Location = new Point(300, 350);
+            lblFKStats.Name = "lblFKStats";
+            lblFKStats.Size = new Size(155, 15);
+            lblFKStats.TabIndex = 0;
+            lblFKStats.Text = "Klik 'Analyze FK' for at starte";
             // 
             // btnGenerateDummies
             // 
-            this.btnGenerateDummies.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnGenerateDummies.BackColor = System.Drawing.Color.LightGreen;
-            this.btnGenerateDummies.Enabled = false;
-            this.btnGenerateDummies.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.btnGenerateDummies.Location = new System.Drawing.Point(850, 420);
-            this.btnGenerateDummies.Name = "btnGenerateDummies";
-            this.btnGenerateDummies.Size = new System.Drawing.Size(220, 35);
-            this.btnGenerateDummies.TabIndex = 11;
-            this.btnGenerateDummies.Text = "Generer Nye Rækker til Parent";
-            this.btnGenerateDummies.UseVisualStyleBackColor = false;
+            btnGenerateDummies.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnGenerateDummies.BackColor = Color.LightGreen;
+            btnGenerateDummies.Enabled = false;
+            btnGenerateDummies.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold);
+            btnGenerateDummies.Location = new Point(836, 450);
+            btnGenerateDummies.Name = "btnGenerateDummies";
+            btnGenerateDummies.Size = new Size(220, 35);
+            btnGenerateDummies.TabIndex = 11;
+            btnGenerateDummies.Text = "Generer Nye Rækker til Parent";
+            btnGenerateDummies.UseVisualStyleBackColor = false;
             // 
             // btnExportMissing
             // 
-            this.btnExportMissing.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnExportMissing.Enabled = false;
-            this.btnExportMissing.Location = new System.Drawing.Point(869, 465);
-            this.btnExportMissing.Name = "btnExportMissing";
-            this.btnExportMissing.Size = new System.Drawing.Size(180, 25);
-            this.btnExportMissing.TabIndex = 12;
-            this.btnExportMissing.Text = "Export til fil";
-            this.btnExportMissing.UseVisualStyleBackColor = true;
+            btnExportMissing.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnExportMissing.Enabled = false;
+            btnExportMissing.Location = new Point(855, 491);
+            btnExportMissing.Name = "btnExportMissing";
+            btnExportMissing.Size = new Size(180, 25);
+            btnExportMissing.TabIndex = 12;
+            btnExportMissing.Text = "Export til fil";
+            btnExportMissing.UseVisualStyleBackColor = true;
             // 
             // btnCopySelected
             // 
-            this.btnCopySelected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCopySelected.Enabled = false;
-            this.btnCopySelected.Location = new System.Drawing.Point(869, 500);
-            this.btnCopySelected.Name = "btnCopySelected";
-            this.btnCopySelected.Size = new System.Drawing.Size(180, 25);
-            this.btnCopySelected.TabIndex = 13;
-            this.btnCopySelected.Text = "Kopiér markerede";
-            this.btnCopySelected.UseVisualStyleBackColor = true;
+            btnCopySelected.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnCopySelected.Enabled = false;
+            btnCopySelected.Location = new Point(855, 522);
+            btnCopySelected.Name = "btnCopySelected";
+            btnCopySelected.Size = new Size(180, 25);
+            btnCopySelected.TabIndex = 13;
+            btnCopySelected.Text = "Kopiér markerede";
+            btnCopySelected.UseVisualStyleBackColor = true;
             // 
             // progressBar1
             // 
-            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 668);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(1156, 23);
-            this.progressBar1.TabIndex = 14;
-            this.progressBar1.Visible = false;
+            progressBar1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            progressBar1.Location = new Point(12, 668);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new Size(1156, 23);
+            progressBar1.TabIndex = 14;
+            progressBar1.Visible = false;
             // 
             // CSVFKRepairForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1180, 703);
-            this.Controls.Add(this.labelParentCSV);
-            this.Controls.Add(this.txtParentCSV);
-            this.Controls.Add(this.btnBrowseParent);
-            this.Controls.Add(this.labelChildCSV);
-            this.Controls.Add(this.txtChildCSV);
-            this.Controls.Add(this.btnBrowseChild);
-            this.Controls.Add(this.labelParentCol);
-            this.Controls.Add(this.cmbParentColumn);
-            this.Controls.Add(this.labelChildCol);
-            this.Controls.Add(this.cmbChildColumn);
-            this.Controls.Add(this.btnAddPrimaryKey);
-            this.Controls.Add(this.btnRemovePrimaryKey);
-            this.Controls.Add(this.pnlDynamicColumns);
-            this.Controls.Add(this.btnAnalyzeFK);
-            this.Controls.Add(this.lblFKStats);
-            this.Controls.Add(this.labelDummyText);
-            this.Controls.Add(this.txtDummyText);
-            this.Controls.Add(this.labelMissingValues);
-            this.Controls.Add(this.lstMissingValues);
-            this.Controls.Add(this.btnGenerateDummies);
-            this.Controls.Add(this.btnExportMissing);
-            this.Controls.Add(this.btnCopySelected);
-            this.Controls.Add(this.progressBar1);
-            this.MinimumSize = new System.Drawing.Size(1196, 669);
-            this.Name = "CSVFKRepairForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Foreign Key Repair - CSV";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(1180, 703);
+            Controls.Add(labelParentCSV);
+            Controls.Add(txtParentCSV);
+            Controls.Add(btnBrowseParent);
+            Controls.Add(labelChildCSV);
+            Controls.Add(txtChildCSV);
+            Controls.Add(btnBrowseChild);
+            Controls.Add(labelParentCol);
+            Controls.Add(cmbParentColumn);
+            Controls.Add(labelChildCol);
+            Controls.Add(cmbChildColumn);
+            Controls.Add(btnAddPrimaryKey);
+            Controls.Add(btnRemovePrimaryKey);
+            Controls.Add(pnlDynamicColumns);
+            Controls.Add(btnAnalyzeFK);
+            Controls.Add(lblFKStats);
+            Controls.Add(labelDummyText);
+            Controls.Add(txtDummyText);
+            Controls.Add(labelMissingValues);
+            Controls.Add(lstMissingValues);
+            Controls.Add(btnGenerateDummies);
+            Controls.Add(btnExportMissing);
+            Controls.Add(btnCopySelected);
+            Controls.Add(progressBar1);
+            MinimumSize = new Size(1196, 669);
+            Name = "CSVFKRepairForm";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Foreign Key Repair - CSV";
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 

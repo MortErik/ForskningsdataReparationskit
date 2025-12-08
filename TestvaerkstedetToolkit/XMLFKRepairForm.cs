@@ -1088,7 +1088,8 @@ namespace TestvaerkstedetToolkit
             contextMenu.Items.Add(copyItem);
 
             var selectAllItem = new ToolStripMenuItem("Markér alle");
-            selectAllItem.Click += (s, e) => {
+            selectAllItem.Click += (s, e) =>
+            {
                 for (int i = 0; i < lstXmlMissingValues.Items.Count; i++)
                     lstXmlMissingValues.SetSelected(i, true);
             };
@@ -1395,5 +1396,10 @@ namespace TestvaerkstedetToolkit
         }
 
         #endregion
+
+        private void separator2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

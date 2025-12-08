@@ -197,7 +197,7 @@
             this.lblXMLFKDesc.Size = new System.Drawing.Size(380, 80);
             this.lblXMLFKDesc.TabIndex = 1;
             this.lblXMLFKDesc.Text = "Reparér foreign key brud i XML-tabeller. " +
-                        "Analyserer XSD-schemas og opretter dummy records " +
+                        "Analyserer tabeldata i XML og opretter dummy records " +
                         "for at sikre data integritet i arkiveringsversionen.";
 
             // 
