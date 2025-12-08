@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TestvaerkstedetToolkit
@@ -14,6 +11,9 @@ namespace TestvaerkstedetToolkit
         [STAThread]
         static void Main()
         {
+            // Sæt DPI awareness mode (nødvendigt for .NET 8)
+            Application.SetHighDpiMode(HighDpiMode.SystemAware);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 

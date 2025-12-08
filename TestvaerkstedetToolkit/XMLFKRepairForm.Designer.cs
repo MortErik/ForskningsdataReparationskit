@@ -433,8 +433,8 @@ namespace TestvaerkstedetToolkit
             // 
             // XMLFKRepairForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1180, 860);
             this.Controls.Add(this.lblTableIndex);
             this.Controls.Add(this.txtTableIndex);
@@ -473,7 +473,7 @@ namespace TestvaerkstedetToolkit
             this.MinimumSize = new System.Drawing.Size(1196, 899);
             this.Name = "XMLFKRepairForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Foreign Key Repair - XML (TableIndex)";
+            this.Text = "Foreign Key Repair - XML";
             this.ResumeLayout(false);
             this.PerformLayout();
 

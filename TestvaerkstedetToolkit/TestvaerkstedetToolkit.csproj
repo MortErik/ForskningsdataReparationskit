@@ -1,152 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3BA89F52-B6C9-4B52-AB16-C54252F9C670}</ProjectGuid>
     <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>TestvaerkstedetToolkit</RootNamespace>
     <AssemblyName>TestvaerkstedetToolkit</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+	<ApplicationManifest>app.manifest</ApplicationManifest>
+    
+    <!-- Disable nullable warnings initially for easier migration -->
+    <Nullable>disable</Nullable>
+    
+    <!-- Disable implicit usings to keep existing using statements -->
+    <ImplicitUsings>disable</ImplicitUsings>
+    
+    <!-- Keep deterministic builds -->
     <Deterministic>true</Deterministic>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    
+    <!-- Auto-generate binding redirects -->
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    
+    <!-- Platform target -->
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
+  <!-- All .cs files are automatically included with SDK-style projects -->
+  <!-- All .resx files are automatically linked to their corresponding .cs files -->
+  
+  <!-- Explicitly declare embedded resources to maintain dependencies -->
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Controls\CompositePKSelector.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\CompositePKSelector.Designer.cs">
+    <EmbeddedResource Update="Controls\CompositePKSelector.resx">
       <DependentUpon>CompositePKSelector.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CSVFKRepairForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CSVFKRepairForm.Designer.cs">
+    </EmbeddedResource>
+    <EmbeddedResource Update="CSVFKRepairForm.resx">
       <DependentUpon>CSVFKRepairForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AnalysisResult.cs" />
-    <Compile Include="Models\ForeignKeyInfo.cs" />
-    <Compile Include="Models\PrimaryKeyInfo.cs" />
-    <Compile Include="Models\SplitConfiguration.cs" />
-    <Compile Include="Models\SplitResult.cs" />
-    <Compile Include="Models\SplitTable.cs" />
-    <Compile Include="Models\TableIndexColumn.cs" />
-    <Compile Include="Models\TableIndexEntry.cs" />
-    <Compile Include="Models\UIDataContainer.cs" />
-    <Compile Include="Models\XMLColumn.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScalableXmlFKRepair.cs" />
-    <Compile Include="Services\AutoIDManager.cs" />
-    <Compile Include="Services\CompositePKSplitAlgorithm.cs" />
-    <Compile Include="Services\PrimaryKeyAnalysisService.cs" />
-    <Compile Include="Services\SplitConfigurationService.cs" />
-    <Compile Include="Services\TableIndexService.cs" />
-    <Compile Include="Services\XMLFileGenerationService.cs" />
-    <Compile Include="Services\XMLSplitService.cs" />
-    <Compile Include="Utilities\DataTypeMapper.cs" />
-    <Compile Include="Utilities\FileSystemHelper.cs" />
-    <Compile Include="Utilities\SplitGenerator.cs" />
-    <Compile Include="Utilities\SplitLogger.cs" />
-    <Compile Include="Utilities\TableIndexParser.cs" />
-    <Compile Include="Utilities\XMLHelper.cs" />
-    <Compile Include="Utilities\XMLNamespaceHelper.cs" />
-    <Compile Include="WelcomeForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WelcomeForm.Designer.cs">
+    </EmbeddedResource>
+    <EmbeddedResource Update="XMLConversionForm.resx">
+      <DependentUpon>XMLConversionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="XMLFKRepairForm.resx">
+      <DependentUpon>XMLFKRepairForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="XMLTableSplitterForm.resx">
+      <DependentUpon>XMLTableSplitterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="WelcomeForm.resx">
       <DependentUpon>WelcomeForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="XMLConversionForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="XMLConversionForm.Designer.cs">
-      <DependentUpon>XMLConversionForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="XMLFKRepairForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="XMLFKRepairForm.Designer.cs">
-      <DependentUpon>XMLFKRepairForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="XMLTableSplitterForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="XMLTableSplitterForm.Designer.cs">
-      <DependentUpon>XMLTableSplitterForm.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="CSVFKRepairForm.resx">
-      <DependentUpon>CSVFKRepairForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="Controls\CompositePKSelector.resx">
-      <DependentUpon>CompositePKSelector.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="XMLConversionForm.resx">
-      <DependentUpon>XMLConversionForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="XMLFKRepairForm.resx">
-      <DependentUpon>XMLFKRepairForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="XMLTableSplitterForm.resx">
-      <DependentUpon>XMLTableSplitterForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>
