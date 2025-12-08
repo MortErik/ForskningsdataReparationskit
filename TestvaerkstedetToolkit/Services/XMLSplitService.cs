@@ -109,12 +109,13 @@ namespace TestvaerkstedetToolkit.Services
                 progress?.Report(75, "Opdaterer tableIndex.xml...");
 
                 // STEP 3: Opdater tableIndex.xml
+                TableIndexUpdateResult tableIndexResult = null;
                 if (!string.IsNullOrEmpty(uiData.TableIndexPath))
                 {
-                    logger?.LogInfo("Starter opdatering af tableIndex.xml med sammensat PK support");
+                    logger?.LogInfo("Starter opdatering af tableIndex.xml");
                     try
                     {
-                        string tableIndexLog = tableIndexService.GenerateUpdatedTableIndex(
+                        tableIndexResult = tableIndexService.GenerateUpdatedTableIndex(
                             uiData.Tables,
                             tempDirectory,
                             uiData,
@@ -124,7 +125,7 @@ namespace TestvaerkstedetToolkit.Services
                         logger?.LogInfo("Afsluttet opdatering af tableIndex.xml");
                         logger?.LogInfo("");
                         logger?.LogInfo("=== TABLEINDEX TRANSFORMATION DETAILS ===");
-                        logger?.LogInfo(tableIndexLog);
+                        logger?.LogInfo(tableIndexResult.TechnicalLog);
                     }
                     catch (Exception ex)
                     {
@@ -179,7 +180,7 @@ namespace TestvaerkstedetToolkit.Services
 
                 // LOG OPERATION END og gem log filer
                 progress?.Report(95, "Genererer log filer...");
-                LogOperationEnd(finalOutputDirectory, uiData, logger);
+                LogOperationEnd(finalOutputDirectory, uiData, logger, tableIndexResult);
 
                 progress?.Report(100, "Opdeling fuldført");
                 return result;
@@ -378,27 +379,58 @@ namespace TestvaerkstedetToolkit.Services
                 logger.LogInfo($"");
                 logger.LogInfo($"Tabel: {table.TableName}");
 
-                var dataColumns = table.Columns.Where(c => !pkColumns.Contains(c.Name)).ToList();
-                var pkColumnsInSplit = table.Columns.Where(c => pkColumns.Contains(c.Name)).ToList();
+                var dataColumns = table.Columns.Where(c => !pkColumns.Contains(c.Name)).OrderBy(c => c.Position).ToList();
+                var pkColumnsInSplit = table.Columns.Where(c => pkColumns.Contains(c.Name)).OrderBy(c => c.Position).ToList();
 
-                logger.LogInfo($"  PK Kolonner ({pkColumnsInSplit.Count}) - Placering i {table.TableName}:");
-                foreach (var pkCol in pkColumnsInSplit)
+                // Beregn korrekt kolonne placering baseret på split index
+                if (table.SplitIndex == 1)
                 {
-                    string position = pkCol.Position > 0 ? $"kolonne {pkCol.ColumnID}" : "auto-genereret";
-                    logger.LogInfo($"    - {pkCol.Name} ({pkCol.DataType}) - placeret på {position}");
+                    // Split1: Behold original rækkefølge - sorter ALLE kolonner efter position
+                    var allColumns = table.Columns.OrderBy(c => c.Position).ToList();
+                    int xmlColumnCounter = 1;
+
+                    logger.LogInfo($"  PK Kolonner ({pkColumnsInSplit.Count}) - Placering i {table.TableName}:");
+                    foreach (var pkCol in pkColumnsInSplit)
+                    {
+                        int positionInSplit = allColumns.IndexOf(pkCol) + 1;
+                        logger.LogInfo($"    - {pkCol.Name} ({pkCol.DataType}) - placeret på c{positionInSplit}");
+                    }
+
+                    logger.LogInfo($"  Data Kolonner ({dataColumns.Count}):");
+                    logger.LogInfo($"    Fra         Til         Navn                Datatype");
+                    logger.LogInfo($"    {new string('-', 60)}");
+
+                    foreach (var col in dataColumns)
+                    {
+                        int positionInSplit = allColumns.IndexOf(col) + 1;
+                        string colName = col.Name.Length > 19 ? col.Name.Substring(0, 16) + "..." : col.Name;
+                        logger.LogInfo($"    {col.ColumnID,-11} c{positionInSplit,-10} {colName,-19} {col.DataType}");
+                    }
                 }
-
-                logger.LogInfo($"  Data Kolonner ({dataColumns.Count}):");
-                logger.LogInfo($"    Fra         Til         Navn                Datatype");
-                logger.LogInfo($"    {new string('-', 60)}");
-
-                var sortedDataColumns = dataColumns.OrderBy(c => c.Position).ToList();
-                for (int i = 0; i < sortedDataColumns.Count; i++)
+                else
                 {
-                    var col = sortedDataColumns[i];
-                    string fromCol = col.ColumnID;
-                    string toCol = col.ColumnID; // Samme da det er per kolonne
-                    logger.LogInfo($"    {fromCol,-11} {toCol,-11} {col.Name,-19} {col.DataType}");
+                    // Split2+: Data kolonner først, PK kolonner bagerst
+                    logger.LogInfo($"  PK Kolonner ({pkColumnsInSplit.Count}) - Placering i {table.TableName}:");
+
+                    int pkStartPosition = dataColumns.Count + 1;
+                    int pkCounter = pkStartPosition;
+                    foreach (var pkCol in pkColumnsInSplit)
+                    {
+                        logger.LogInfo($"    - {pkCol.Name} ({pkCol.DataType}) - placeret på c{pkCounter}");
+                        pkCounter++;
+                    }
+
+                    logger.LogInfo($"  Data Kolonner ({dataColumns.Count}):");
+                    logger.LogInfo($"    Fra         Til         Navn                Datatype");
+                    logger.LogInfo($"    {new string('-', 60)}");
+
+                    int toCounter = 1;
+                    foreach (var col in dataColumns)
+                    {
+                        string colName = col.Name.Length > 19 ? col.Name.Substring(0, 16) + "..." : col.Name;
+                        logger.LogInfo($"    {col.ColumnID,-11} c{toCounter,-10} {colName,-19} {col.DataType}");
+                        toCounter++;
+                    }
                 }
 
                 logger.LogInfo($"  → Total kolonner: {table.Columns.Count} ({pkColumnsInSplit.Count} PK + {dataColumns.Count} data)");
@@ -409,7 +441,7 @@ namespace TestvaerkstedetToolkit.Services
         /// <summary>
         /// Log operation end og gem alle log filer via logger
         /// </summary>
-        private void LogOperationEnd(string outputDirectory, UIDataContainer uiData, ISplitLogger logger)
+        private void LogOperationEnd(string outputDirectory, UIDataContainer uiData, ISplitLogger logger, TableIndexUpdateResult tableIndexResult)
         {
             if (logger == null) return;
 
@@ -445,9 +477,9 @@ namespace TestvaerkstedetToolkit.Services
             logger.LogInfo("            OPERATION FULDFØRT ");
             logger.LogInfo("==============================================");
 
-            // GEM ALLE LOG FILER (delegeret til logger)
+            // GEM ALLE LOG FILER (delegeret til logger med tableIndex result)
             string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            logger.SaveAllLogs(outputDirectory, timestamp, uiData);
+            logger.SaveAllLogs(outputDirectory, timestamp, uiData, tableIndexResult);
         }
 
         /// <summary>

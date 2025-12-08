@@ -38,7 +38,7 @@ namespace TestvaerkstedetToolkit.Services
         /// <summary>
         /// Generer og gem alle 3 log filer: technical (HTML), user-friendly (HTML), reference (TXT)
         /// </summary>
-        public void SaveAllLogs(string outputDirectory, string timestamp, UIDataContainer uiData)
+        public void SaveAllLogs(string outputDirectory, string timestamp, UIDataContainer uiData, TableIndexUpdateResult tableIndexResult)
         {
             // 1. GEM TECHNICAL LOG (.log først, derefter konverter til HTML)
             string technicalLogTempPath = Path.Combine(outputDirectory, $"split_operation_technical_{timestamp}.temp.log");
@@ -46,15 +46,24 @@ namespace TestvaerkstedetToolkit.Services
 
             string technicalLogPath = Path.Combine(outputDirectory, $"split_operation_technical_{timestamp}.html");
             ConvertTechnicalLogToHTML(technicalLogTempPath, technicalLogPath);
-            File.Delete(technicalLogTempPath); // Slet temp fil
+            File.Delete(technicalLogTempPath);
 
             // 2. GEM USER-FRIENDLY LOG (direkte som HTML)
             string completeLogPath = Path.Combine(outputDirectory, $"split_operation_complete_{timestamp}.html");
             GenerateUserFriendlyLog(completeLogPath, outputDirectory, timestamp, uiData);
 
-            // 3. GEM REFERENCE LOG (FK adjustments - ren .txt)
+            // 3. GEM REFERENCE LOG (fra TableIndexService eller fallback)
             string referenceLogPath = Path.Combine(outputDirectory, $"split_operation_references_{timestamp}.txt");
-            GenerateReferenceLog(referenceLogPath, uiData);
+            if (tableIndexResult != null && !string.IsNullOrEmpty(tableIndexResult.ReferenceLog))
+            {
+                // Brug reference log fra TableIndexService (har FK info)
+                File.WriteAllText(referenceLogPath, tableIndexResult.ReferenceLog, Encoding.UTF8);
+            }
+            else
+            {
+                // Fallback: Generer basic reference log uden FK info
+                GenerateReferenceLog(referenceLogPath, uiData);
+            }
         }
 
         /// <summary>
@@ -191,34 +200,75 @@ namespace TestvaerkstedetToolkit.Services
             // Section 3: Column Distribution
             html.AppendLine("        <h2>3. Column Distribution</h2>");
 
+            // Section 3: Column Distribution
+            html.AppendLine("        <h2>3. Column Distribution</h2>");
+
             foreach (var table in uiData.Tables)
             {
                 var dataColumns = table.Columns.Where(c => !pkColumns.Contains(c.Name)).OrderBy(c => c.Position).ToList();
-                var pkColumnsInSplit = table.Columns.Where(c => pkColumns.Contains(c.Name)).ToList();
+                var pkColumnsInSplit = table.Columns.Where(c => pkColumns.Contains(c.Name)).OrderBy(c => c.Position).ToList();
 
                 html.AppendLine("        <div class=\"split-section\">");
                 html.AppendLine($"            <h3>{table.TableName} - {table.Columns.Count} kolonner</h3>");
 
-                // PK Columns Table with Placement Info
-                html.AppendLine($"            <h4>Primary Key ({pkColumnsInSplit.Count} kolonner - duplikeret til alle splits)</h4>");
-                html.AppendLine("            <table class=\"pk-table\">");
-                html.AppendLine("                <tr><th>Navn</th><th>Datatype</th><th>Placering</th></tr>");
-                foreach (var pkCol in pkColumnsInSplit)
+                if (table.SplitIndex == 1)
                 {
-                    string position = pkCol.Position > 0 ? $"Kolonne {pkCol.ColumnID}" : "Auto-genereret";
-                    html.AppendLine($"                <tr><td>{pkCol.Name}</td><td>{pkCol.DataType}</td><td>{position}</td></tr>");
-                }
-                html.AppendLine("            </table>");
+                    // Split1: Behold original rækkefølge - sorter alle kolonner efter position
+                    var allColumns = table.Columns.OrderBy(c => c.Position).ToList();
 
-                // Data Columns Table (Option C format)
-                html.AppendLine($"            <h4>Data Kolonner ({dataColumns.Count})</h4>");
-                html.AppendLine("            <table class=\"data-table\">");
-                html.AppendLine("                <tr><th>Fra</th><th>Til</th><th>Navn</th><th>Datatype</th></tr>");
-                foreach (var col in dataColumns)
-                {
-                    html.AppendLine($"                <tr><td>{col.ColumnID}</td><td>{col.ColumnID}</td><td>{col.Name}</td><td>{col.DataType}</td></tr>");
+                    // PK Columns Table with Placement
+                    html.AppendLine($"            <h4>Primary Key ({pkColumnsInSplit.Count} kolonner - duplikeret til alle splits)</h4>");
+                    html.AppendLine("            <table class=\"pk-table\">");
+                    html.AppendLine("                <tr><th>Navn</th><th>Datatype</th><th>Placering i {table.TableName}</th></tr>");
+                    foreach (var pkCol in pkColumnsInSplit)
+                    {
+                        int positionInSplit = allColumns.IndexOf(pkCol) + 1;
+                        html.AppendLine($"                <tr><td>{pkCol.Name}</td><td>{pkCol.DataType}</td><td>Kolonne c{positionInSplit}</td></tr>");
+                    }
+                    html.AppendLine("            </table>");
+
+                    // Data Columns Table med Fra/Til
+                    html.AppendLine($"            <h4>Data Kolonner ({dataColumns.Count})</h4>");
+                    html.AppendLine("            <table class=\"data-table\">");
+                    html.AppendLine("                <tr><th>Fra</th><th>Til</th><th>Navn</th><th>Datatype</th></tr>");
+                    foreach (var col in dataColumns)
+                    {
+                        int positionInSplit = allColumns.IndexOf(col) + 1;
+                        html.AppendLine($"                <tr><td>{col.ColumnID}</td><td>c{positionInSplit}</td><td>{col.Name}</td><td>{col.DataType}</td></tr>");
+                    }
+                    html.AppendLine("            </table>");
                 }
-                html.AppendLine("            </table>");
+                else
+                {
+                    // Split2+: Data kolonner først, PK kolonner bagerst
+
+                    // PK Columns Table placeres bagerst
+                    html.AppendLine($"            <h4>Primary Key ({pkColumnsInSplit.Count} kolonner - duplikeret til alle splits)</h4>");
+                    html.AppendLine("            <table class=\"pk-table\">");
+                    html.AppendLine("                <tr><th>Navn</th><th>Datatype</th><th>Placering i {table.TableName}</th></tr>");
+
+                    int pkStartPosition = dataColumns.Count + 1;
+                    int pkCounter = pkStartPosition;
+                    foreach (var pkCol in pkColumnsInSplit)
+                    {
+                        html.AppendLine($"                <tr><td>{pkCol.Name}</td><td>{pkCol.DataType}</td><td>Kolonne c{pkCounter}</td></tr>");
+                        pkCounter++;
+                    }
+                    html.AppendLine("            </table>");
+
+                    // Data Columns Table - starter fra c1
+                    html.AppendLine($"            <h4>Data Kolonner ({dataColumns.Count})</h4>");
+                    html.AppendLine("            <table class=\"data-table\">");
+                    html.AppendLine("                <tr><th>Fra</th><th>Til</th><th>Navn</th><th>Datatype</th></tr>");
+
+                    int toCounter = 1;
+                    foreach (var col in dataColumns)
+                    {
+                        html.AppendLine($"                <tr><td>{col.ColumnID}</td><td>c{toCounter}</td><td>{col.Name}</td><td>{col.DataType}</td></tr>");
+                        toCounter++;
+                    }
+                    html.AppendLine("            </table>");
+                }
 
                 html.AppendLine("        </div>");
             }

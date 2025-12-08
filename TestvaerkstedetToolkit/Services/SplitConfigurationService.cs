@@ -24,15 +24,34 @@ namespace TestvaerkstedetToolkit.Services
             int pkColumnsCount = pkColumns.Count;
             int totalColumns = tableEntry.Columns.Count;
 
-            // Tjek om PK kolonner er eksisterende kolonner (allerede i tableEntry.Columns)
-            int existingPKCount = tableEntry.Columns.Count(c => pkColumns.Contains(c.Name));
+            // Beregn max data kolonner per split
+            // PK duplikeres til ALLE splits (også Split2+), så de optager plads
+            int maxDataColumnsPerSplit = maxColumnsPerTable - pkColumnsCount;
 
-            // Hvis PK er eksisterende, skal de ikke tælles ekstra
-            int effectivePKOverhead = (existingPKCount == pkColumnsCount) ? 0 : pkColumnsCount;
-
-            if (totalColumns + effectivePKOverhead <= maxColumnsPerTable)
+            // Sikkerhedscheck
+            if (maxDataColumnsPerSplit <= 0)
             {
-                // Scenario: Under 950 - halvér for test
+                throw new InvalidOperationException($"For mange PK kolonner ({pkColumnsCount}). Max kolonner per tabel er {maxColumnsPerTable}.");
+            }
+
+            // Tjek om split er nødvendig
+            // I Split1 kan PK kolonner være en del af de første kolonner (ikke ekstra overhead for Split1)
+            // Men Split2+ skal have PK duplikeret, så vi beregner baseret på worst-case
+            int existingPKCount = tableEntry.Columns.Count(c => pkColumns.Contains(c.Name));
+            bool pkIsExisting = (existingPKCount == pkColumnsCount);
+
+            if (pkIsExisting && totalColumns <= maxColumnsPerTable)
+            {
+                // Scenario: Under 950 OG PK er eksisterende - halvér for test
+                int midPoint = totalColumns / 2;
+                if (midPoint > 0 && midPoint < totalColumns)
+                {
+                    splitPoints.Add(midPoint);
+                }
+            }
+            else if (!pkIsExisting && totalColumns + pkColumnsCount <= maxColumnsPerTable)
+            {
+                // Scenario: Under 950 med auto-genereret PK overhead - halvér for test
                 int midPoint = totalColumns / 2;
                 if (midPoint > 0 && midPoint < totalColumns)
                 {
@@ -41,17 +60,14 @@ namespace TestvaerkstedetToolkit.Services
             }
             else
             {
-                // Scenario: Over 950 - beregn splits
-                // Hvis alle PK er eksisterende, skal de inkluderes i hver split
-                // Hver tabel får: data kolonner + (PK kolonner hvis de skal duplikeres)
-                int columnsPerSplit = maxColumnsPerTable - effectivePKOverhead;
-
-                int currentPosition = columnsPerSplit;
+                // Scenario: Over 950 - beregn splits med PK overhead
+                // Hver split får maks: (950 - PK kolonner) data kolonner
+                int currentPosition = maxDataColumnsPerSplit;
 
                 while (currentPosition < totalColumns)
                 {
                     splitPoints.Add(currentPosition);
-                    currentPosition += columnsPerSplit;
+                    currentPosition += maxDataColumnsPerSplit;
                 }
             }
 

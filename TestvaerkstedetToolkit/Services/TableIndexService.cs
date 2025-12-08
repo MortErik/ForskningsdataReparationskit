@@ -18,7 +18,7 @@ namespace TestvaerkstedetToolkit.Services
         /// Generer opdateret tableIndex.xml med split tabeller og opdaterede FK referencer
         /// ERSTATTER original tabel med første split på samme position
         /// </summary>
-        public string GenerateUpdatedTableIndex(List<SplitTable> splitTables, string outputDirectory, UIDataContainer uiData, int originalTableNumber, int startingTableNumber)
+        public TableIndexUpdateResult GenerateUpdatedTableIndex(List<SplitTable> splitTables, string outputDirectory, UIDataContainer uiData, int originalTableNumber, int startingTableNumber)
         {
             try
             {
@@ -118,7 +118,16 @@ namespace TestvaerkstedetToolkit.Services
                 logger.AppendLine("═══════════════════════════════════════════════════════════");
 
                 System.Diagnostics.Debug.WriteLine($"TableIndex transformation fuldført: {splitTables.Count} splits");
-                return logger.ToString();
+
+                // Generer reference log med FK opdaterings info
+                string referenceLog = GenerateReferenceLogWithFKInfo(splitTables, uiData, fkUpdateLog);
+
+                return new TableIndexUpdateResult
+                {
+                    TechnicalLog = logger.ToString(),
+                    ReferenceLog = referenceLog
+                };
+                //return logger.ToString();
             }
             catch (Exception ex)
             {
@@ -824,6 +833,176 @@ namespace TestvaerkstedetToolkit.Services
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Generer reference log med FK opdaterings information
+        /// </summary>
+        private string GenerateReferenceLogWithFKInfo(List<SplitTable> splitTables, UIDataContainer uiData, string fkUpdateLog)
+        {
+            var log = new StringBuilder();
+            var pkInfo = uiData.PrimaryKey;
+            var pkColumns = pkInfo.GetAllPrimaryKeyColumns();
+
+            log.AppendLine("═══════════════════════════════════════════════════════════════════════════");
+            log.AppendLine("              TABLEINDEX OPDATERINGER - REFERENCE LOG");
+            log.AppendLine("═══════════════════════════════════════════════════════════════════════════");
+            log.AppendLine($"Genereret: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+            log.AppendLine($"Original Tabel: {uiData.OriginalTableName}");
+            log.AppendLine($"Split Tabeller: {splitTables.Count}");
+            log.AppendLine();
+
+            // SEKTION 1: HVAD ER SKET
+            log.AppendLine("═══ 1. TABLEINDEX OPDATERINGER ═══");
+            log.AppendLine();
+            log.AppendLine("TABELLER:");
+            log.AppendLine($"  ✓ Original tabel '{uiData.OriginalTableName}' erstattet med:");
+            foreach (var split in splitTables)
+            {
+                log.AppendLine($"    • {split.TableName} ({split.Columns.Count} kolonner)");
+            }
+            log.AppendLine();
+
+            log.AppendLine("REUNION VIEW:");
+            log.AppendLine($"  ✓ Oprettet view: RA_Samling_af_{uiData.OriginalTableName}");
+            log.AppendLine($"    JOIN kolonner: {string.Join(", ", pkColumns)}");
+            log.AppendLine();
+
+            // SEKTION 2: FOREIGN KEY OPDATERINGER
+            log.AppendLine("═══ 2. FOREIGN KEY OPDATERINGER ═══");
+            log.AppendLine();
+
+            // Parse FK update log for at udtrække info
+            var fkSummary = ParseFKUpdateLog(fkUpdateLog);
+
+            if (fkSummary.TotalFKs == 0)
+            {
+                log.AppendLine("  → Ingen eksterne foreign keys fundet");
+                log.AppendLine("  → Ingen manuelle handlinger påkrævet");
+            }
+            else
+            {
+                log.AppendLine($"FUNDET: {fkSummary.TotalFKs} foreign key(s) til {uiData.OriginalTableName}");
+                log.AppendLine();
+
+                if (fkSummary.UpdatedFKs > 0)
+                {
+                    log.AppendLine($"OPDATERET AUTOMATISK: {fkSummary.UpdatedFKs} FK(s)");
+                    log.AppendLine("  → Disse peger nu på de korrekte split tabeller");
+                    log.AppendLine("  → Ingen handling påkrævet");
+                }
+
+                if (fkSummary.SplitFKs > 0)
+                {
+                    log.AppendLine();
+                    log.AppendLine($"SPLIT OP: {fkSummary.SplitFKs} FK(s)");
+                    log.AppendLine("  → Composite FKs der spændte flere kolonner er splittet op");
+                    log.AppendLine("  → Ingen handling påkrævet");
+                }
+
+                if (fkSummary.SkippedFKs > 0)
+                {
+                    log.AppendLine();
+                    log.AppendLine($"⚠️  KUNNE IKKE OPDATERES: {fkSummary.SkippedFKs} FK(s)");
+                    log.AppendLine();
+                    log.AppendLine("ÅRSAG:");
+                    log.AppendLine("  • Kolonne(r) ikke fundet i nogen split");
+                    log.AppendLine("  • Source tabel mangler sammensat PK kolonner");
+                    log.AppendLine();
+                    log.AppendLine("MANUEL HANDLING PÅKRÆVET:");
+                    log.AppendLine("  1. Find de pågældende tabeller i tableIndex_updated.xml");
+                    log.AppendLine($"  2. Tjek hvilke FKs stadig refererer til '{uiData.OriginalTableName}'");
+                    log.AppendLine("  3. Opdater manuelt til at pege på korrekt split tabel");
+                    log.AppendLine();
+                    log.AppendLine("SE TEKNISK LOG FOR DETALJER om hvilke specifikke FKs der fejlede");
+                }
+            }
+
+            log.AppendLine();
+
+            // SEKTION 3: PRIMARY KEY INFO
+            log.AppendLine("═══ 3. PRIMARY KEY INFORMATION ═══");
+            log.AppendLine();
+            log.AppendLine($"Type: {(pkInfo.IsComposite ? "Composite (sammensat)" : "Single")}");
+            log.AppendLine($"Kolonner: {string.Join(", ", pkColumns)}");
+
+            if (pkInfo.IsComposite)
+            {
+                log.AppendLine();
+                log.AppendLine("VIGTIGT VED SAMMENSAT PK:");
+                log.AppendLine("  • Alle splits har SAMME sammensat PK");
+                log.AppendLine("  • FKs til disse splits skal også være sammensat");
+                log.AppendLine($"  • Eksempel: FK skal inkludere ALLE kolonner: {string.Join(" + ", pkColumns)}");
+            }
+
+            log.AppendLine();
+
+            // SEKTION 4: CHAIN TOPOLOGY INFO
+            log.AppendLine("═══ 4. SPLIT RELATIONER (CHAIN TOPOLOGY) ═══");
+            log.AppendLine();
+            log.AppendLine("Split tabellerne er linket i en kæde:");
+            for (int i = 0; i < splitTables.Count; i++)
+            {
+                var table = splitTables[i];
+                if (i < splitTables.Count - 1)
+                {
+                    var nextTable = splitTables[i + 1];
+                    log.AppendLine($"  {table.TableName} → {nextTable.TableName}");
+                }
+                else
+                {
+                    log.AppendLine($"  {table.TableName} (sidste)");
+                }
+            }
+
+            log.AppendLine();
+            log.AppendLine("═══════════════════════════════════════════════════════════════════════════");
+            log.AppendLine("                            LOG AFSLUTTET");
+            log.AppendLine("═══════════════════════════════════════════════════════════════════════════");
+
+            return log.ToString();
+        }
+
+        /// <summary>
+        /// Parse FK update log for at udtrække summary information
+        /// </summary>
+        private (int TotalFKs, int UpdatedFKs, int SplitFKs, int SkippedFKs) ParseFKUpdateLog(string fkUpdateLog)
+        {
+            int totalFKs = 0;
+            int updatedFKs = 0;
+            int splitFKs = 0;
+            int skippedFKs = 0;
+
+            if (string.IsNullOrEmpty(fkUpdateLog))
+                return (0, 0, 0, 0);
+
+            // Parse "Fundet X foreign key(s)"
+            var foundMatch = System.Text.RegularExpressions.Regex.Match(fkUpdateLog, @"Fundet (\d+) foreign key");
+            if (foundMatch.Success)
+            {
+                totalFKs = int.Parse(foundMatch.Groups[1].Value);
+            }
+
+            // Parse resultat sektion
+            var resultMatch = System.Text.RegularExpressions.Regex.Match(fkUpdateLog, @"• (\d+) FK opdateret");
+            if (resultMatch.Success)
+            {
+                updatedFKs = int.Parse(resultMatch.Groups[1].Value);
+            }
+
+            var splitMatch = System.Text.RegularExpressions.Regex.Match(fkUpdateLog, @"• (\d+) FK split op");
+            if (splitMatch.Success)
+            {
+                splitFKs = int.Parse(splitMatch.Groups[1].Value);
+            }
+
+            var skippedMatch = System.Text.RegularExpressions.Regex.Match(fkUpdateLog, @"• (\d+) FK skipped");
+            if (skippedMatch.Success)
+            {
+                skippedFKs = int.Parse(skippedMatch.Groups[1].Value);
+            }
+
+            return (totalFKs, updatedFKs, splitFKs, skippedFKs);
         }
     }
 }

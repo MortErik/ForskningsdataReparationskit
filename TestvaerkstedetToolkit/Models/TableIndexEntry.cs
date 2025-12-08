@@ -8,6 +8,16 @@ using TestvaerkstedetToolkit.Models;
 
 namespace TestvaerkstedetToolkit.Models
 {
+
+    /// <summary>
+    /// Result fra tableIndex opdatering med logs
+    /// </summary>
+    public class TableIndexUpdateResult
+    {
+        public string TechnicalLog { get; set; }
+        public string ReferenceLog { get; set; }
+    }
+
     /// <summary>
     /// TableIndex entry med komplet metadata
     /// </summary>
