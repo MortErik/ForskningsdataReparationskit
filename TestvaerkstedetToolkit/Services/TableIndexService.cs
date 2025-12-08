@@ -16,7 +16,7 @@ namespace TestvaerkstedetToolkit.Services
     {
         /// <summary>
         /// Generer opdateret tableIndex.xml med split tabeller og opdaterede FK referencer
-        /// ERSTATTER original tabel med første split på samme position
+        /// Erstatter original tabel med første split på samme position
         /// </summary>
         public TableIndexUpdateResult GenerateUpdatedTableIndex(List<SplitTable> splitTables, string outputDirectory, UIDataContainer uiData, int originalTableNumber, int startingTableNumber)
         {

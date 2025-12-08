@@ -29,7 +29,7 @@ namespace TestvaerkstedetToolkit.Services
         void LogWarning(string message);
         void LogError(string message);
         void SaveToFile(string logPath);
-        void SaveAllLogs(string outputDirectory, string timestamp, UIDataContainer uiData);
+        void SaveAllLogs(string outputDirectory, string timestamp, UIDataContainer uiData, TableIndexUpdateResult tableIndexResult);
     }
 
     /// <summary>
