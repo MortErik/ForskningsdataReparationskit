@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -25,6 +26,7 @@ namespace TestvaerkstedetToolkit.Services
             var uniqueValues = new HashSet<string>();
             int totalCount = 0;
             int nullCount = 0;
+            int duplicateCount = 0;
 
             // Pre-build columnID lookup
             var columnIDMap = new Dictionary<string, string>();
@@ -68,16 +70,13 @@ namespace TestvaerkstedetToolkit.Services
                             System.Diagnostics.Debug.WriteLine($"\n--- ROW {totalCount} ---");
                         }
 
-                        // Læs row som string først, parse bagefter
-                        string rowXml = reader.ReadOuterXml();
-
-                        // Parse med XDocument for SIKKER kolonnetilgang
-                        var rowDoc = XDocument.Parse(rowXml);
-                        var ns = rowDoc.Root.GetDefaultNamespace();
+                        // Parse direkte fra reader
+                        var rowElement = XElement.Load(reader.ReadSubtree());
+                        var ns = rowElement.GetDefaultNamespace();
 
                         if (debugThisRow)
                         {
-                            var allColumns = rowDoc.Descendants().Where(e => e.Name.LocalName.StartsWith("c")).Select(e => e.Name.LocalName);
+                            var allColumns = rowElement.Descendants().Where(e => e.Name.LocalName.StartsWith("c")).Select(e => e.Name.LocalName);
                             System.Diagnostics.Debug.WriteLine($"  Kolonner i row: {string.Join(", ", allColumns)}");
                         }
 
@@ -101,7 +100,7 @@ namespace TestvaerkstedetToolkit.Services
                             string columnID = columnIDMap[pkColumnName];
                             bool isNullable = columnNullableMap[pkColumnName];
 
-                            var valueElement = rowDoc.Descendants(ns + columnID).FirstOrDefault();
+                            var valueElement = rowElement.Descendants(ns + columnID).FirstOrDefault();
 
                             if (debugThisRow)
                             {
@@ -170,7 +169,6 @@ namespace TestvaerkstedetToolkit.Services
                                 keyParts.Add(value.Trim());
                             }
                         }
-
                         if (hasNull)
                         {
                             nullCount++;
@@ -181,8 +179,14 @@ namespace TestvaerkstedetToolkit.Services
                         }
                         else
                         {
+                            // Byg sammensat PK og registrer eventuelle duplikater
+                            // HashSet.Add() returnerer false hvis key allerede findes
                             string compositeKey = string.Join("|", keyParts);
-                            uniqueValues.Add(compositeKey);
+                            if (!uniqueValues.Add(compositeKey))
+                            {
+                                duplicateCount++;
+                                System.Diagnostics.Debug.WriteLine($"  DUPLIKAT fundet! Key '{compositeKey}'");
+                            }
 
                             if (debugThisRow)
                             {
@@ -200,7 +204,7 @@ namespace TestvaerkstedetToolkit.Services
             }
 
             System.Diagnostics.Debug.WriteLine($"\n=== PK ANALYSE SLUT ===");
-            System.Diagnostics.Debug.WriteLine($"Total: {totalCount:N0}, Unique: {uniqueValues.Count:N0}, Null: {nullCount:N0}");
+            System.Diagnostics.Debug.WriteLine($"Total: {totalCount:N0}, Unique: {uniqueValues.Count:N0}, Null: {nullCount:N0}, Duplikater: {duplicateCount:N0}");
 
             return new AnalysisResult
             {

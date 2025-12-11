@@ -490,8 +490,8 @@ namespace TestvaerkstedetToolkit
             }
             else if (uniqueCount + nullCount == totalCount && nullCount > 0)
             {
-                message += "NÆSTEN GOD: Kombinationen er unik men har null værdier\n" +
-                         "For arkiveringsversionen anbefales det at evt. tilføje en auto-genereret kolonne.";
+                message += "ADVARSEL: Kombinationen er unik men har null værdier\n" +
+                         "For arkiveringsversionen anbefales det at finde en anden mulig primærnøgle/primørnøgle kombination.";
 
                 var result = MessageBox.Show(message + "\n\nTilføj auto-genereret kolonne til primærnøglen?",
                                             "Primærnøgle Analyse", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -507,8 +507,7 @@ namespace TestvaerkstedetToolkit
                 int duplicates = totalCount - uniqueCount - nullCount;
                 message += $"IKKE EGNET: Kombinationen er ikke unik!\n" +
                          $"Antal duplikat kombinationer: {duplicates:N0}\n" +
-                         $"Dette vil bryde referentiel integritet i arkiveringsversionen.\n\n" +
-                         $"Anbefaling: Tilføj auto-genereret kolonne til primærnøglen.";
+                         $"Dette vil bryde referentiel integritet i arkiveringsversionen.\n\n";
 
                 var result = MessageBox.Show(message + "\n\nTilføj auto-genereret kolonne til primærnøglen?",
                                             "Primærnøgle Analyse", MessageBoxButtons.YesNo, MessageBoxIcon.Error);

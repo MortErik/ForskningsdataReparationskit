@@ -73,7 +73,7 @@
             groupBoxTableIndex.Margin = new System.Windows.Forms.Padding(2);
             groupBoxTableIndex.Name = "groupBoxTableIndex";
             groupBoxTableIndex.Padding = new System.Windows.Forms.Padding(2);
-            groupBoxTableIndex.Size = new System.Drawing.Size(848, 84);
+            groupBoxTableIndex.Size = new System.Drawing.Size(848, 90);
             groupBoxTableIndex.TabIndex = 0;
             groupBoxTableIndex.TabStop = false;
             groupBoxTableIndex.Text = "1. TableIndex Workflow (Hovedindgang)";
@@ -101,10 +101,10 @@
             // lblTableIndexPath
             // 
             lblTableIndexPath.AutoSize = true;
-            lblTableIndexPath.Location = new System.Drawing.Point(15, 21);
+            lblTableIndexPath.Location = new System.Drawing.Point(4, 20);
             lblTableIndexPath.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             lblTableIndexPath.Name = "lblTableIndexPath";
-            lblTableIndexPath.Size = new System.Drawing.Size(103, 15);
+            lblTableIndexPath.Size = new System.Drawing.Size(104, 15);
             lblTableIndexPath.TabIndex = 0;
             lblTableIndexPath.Text = "TableIndex.xml sti:";
             // 
@@ -122,7 +122,7 @@
             // lblTableSelector
             // 
             lblTableSelector.AutoSize = true;
-            lblTableSelector.Location = new System.Drawing.Point(15, 47);
+            lblTableSelector.Location = new System.Drawing.Point(4, 46);
             lblTableSelector.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             lblTableSelector.Name = "lblTableSelector";
             lblTableSelector.Size = new System.Drawing.Size(65, 15);
@@ -133,10 +133,10 @@
             // 
             lblTableInfo.AutoSize = true;
             lblTableInfo.ForeColor = System.Drawing.Color.DarkBlue;
-            lblTableInfo.Location = new System.Drawing.Point(15, 68);
+            lblTableInfo.Location = new System.Drawing.Point(4, 71);
             lblTableInfo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             lblTableInfo.Name = "lblTableInfo";
-            lblTableInfo.Size = new System.Drawing.Size(184, 15);
+            lblTableInfo.Size = new System.Drawing.Size(186, 15);
             lblTableInfo.TabIndex = 0;
             lblTableInfo.Text = "Vælg tableIndex.xml for at starte...";
             // 
