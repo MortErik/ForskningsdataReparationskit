@@ -387,7 +387,7 @@ namespace TestvaerkstedetToolkit.Services
                 {
                     // Split1: Behold original rækkefølge - sorter ALLE kolonner efter position
                     var allColumns = table.Columns.OrderBy(c => c.Position).ToList();
-                    int xmlColumnCounter = 1;
+                    //int xmlColumnCounter = 1;
 
                     logger.LogInfo($"  PK Kolonner ({pkColumnsInSplit.Count}) - Placering i {table.TableName}:");
                     foreach (var pkCol in pkColumnsInSplit)

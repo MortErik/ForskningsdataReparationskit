@@ -22,7 +22,7 @@ namespace TestvaerkstedetToolkit
         /// <summary>
         /// XML schema kolonne information
         /// </summary>
-        private class col
+        private class columnClass
         {
             public int colNr = 0;
             public string dataType = "";
@@ -36,7 +36,7 @@ namespace TestvaerkstedetToolkit
         // XML conversion fields
         int currentRowCount = 0;
         Dictionary<int, string> xmlElementer = new Dictionary<int, string>();
-        List<col> colList = new List<col>();
+        List<columnClass> colList = new List<columnClass>();
         List<NumericUpDown> numList = new List<NumericUpDown>();
 
         // Dialogs
@@ -299,7 +299,7 @@ namespace TestvaerkstedetToolkit
 
         private void LavKolonneliste(string xsdPath)
         {
-            colList = new List<col>();
+            colList = new List<columnClass>();
 
             foreach (string line in File.ReadAllLines(@xsdPath))
             {
@@ -310,7 +310,7 @@ namespace TestvaerkstedetToolkit
 
                     string cNum = line.Substring(start + 7, slut - (start + 7));
 
-                    col c = new col();
+                    columnClass c = new columnClass();
                     c.colNr = int.Parse(cNum);
 
                     if (line.ToLower().Contains("nillable=\"true\"") == true)

@@ -104,7 +104,7 @@
             lblTableIndexPath.Location = new System.Drawing.Point(4, 20);
             lblTableIndexPath.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             lblTableIndexPath.Name = "lblTableIndexPath";
-            lblTableIndexPath.Size = new System.Drawing.Size(104, 15);
+            lblTableIndexPath.Size = new System.Drawing.Size(103, 15);
             lblTableIndexPath.TabIndex = 0;
             lblTableIndexPath.Text = "TableIndex.xml sti:";
             // 
@@ -136,7 +136,7 @@
             lblTableInfo.Location = new System.Drawing.Point(4, 71);
             lblTableInfo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             lblTableInfo.Name = "lblTableInfo";
-            lblTableInfo.Size = new System.Drawing.Size(186, 15);
+            lblTableInfo.Size = new System.Drawing.Size(184, 15);
             lblTableInfo.TabIndex = 0;
             lblTableInfo.Text = "Vælg tableIndex.xml for at starte...";
             // 
@@ -156,7 +156,7 @@
             // lblSourceXML
             // 
             lblSourceXML.AutoSize = true;
-            lblSourceXML.Location = new System.Drawing.Point(11, 18);
+            lblSourceXML.Location = new System.Drawing.Point(4, 19);
             lblSourceXML.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             lblSourceXML.Name = "lblSourceXML";
             lblSourceXML.Size = new System.Drawing.Size(63, 15);
