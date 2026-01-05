@@ -327,7 +327,7 @@ namespace TestvaerkstedetToolkit
             lblIntegrityDesc.Name = "lblIntegrityDesc";
             lblIntegrityDesc.Size = new Size(114, 15);
             lblIntegrityDesc.TabIndex = 0;
-            lblIntegrityDesc.Text = "Integrity beskrivelse:";
+            lblIntegrityDesc.Text = "Kolonnebeskrivelse:";
             // 
             // txtIntegrityDesc
             // 
