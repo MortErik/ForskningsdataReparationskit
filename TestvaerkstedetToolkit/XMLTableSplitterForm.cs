@@ -413,7 +413,7 @@ namespace TestvaerkstedetToolkit
         #region Primary Key Analysis
 
         /// <summary>
-        /// PK Analyse med composite support - analysér combined unikhed
+        /// PK Analyse - analysér combined unikhed
         /// Bruger nu PrimaryKeyAnalysisService
         /// </summary>
         private async void btnAnalyzePK_Click(object sender, EventArgs e)
@@ -465,7 +465,7 @@ namespace TestvaerkstedetToolkit
                 var pkColumns = pkInfo.GetAllPrimaryKeyColumns();
                 
 
-                lblPreviewInfo.Text = $"Analyserer {(pkInfo.IsComposite ? "composite" : "enkelt")} primærnøgle unikhed...";
+                lblPreviewInfo.Text = $"Analyserer {(pkInfo.IsComposite ? "sammensat" : "enkelt")} primærnøgle unikhed...";
 
                 var analysisResult = await Task.Run(() =>
                     pkAnalysisService.AnalyzeCompositePrimaryKeyUniqueness(

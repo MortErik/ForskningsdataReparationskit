@@ -14,9 +14,6 @@ namespace TestvaerkstedetToolkit.Services
     /// </summary>
     public class PrimaryKeyAnalysisService
     {
-        /// <summary>
-        /// Analysér combined unikhed for composite eller single PK
-        /// </summary>
         public AnalysisResult AnalyzeCompositePrimaryKeyUniqueness(
             string xmlPath,
             List<string> pkColumnNames,

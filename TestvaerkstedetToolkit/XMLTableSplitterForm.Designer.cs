@@ -205,7 +205,7 @@
             btnAnalyzePK.Name = "btnAnalyzePK";
             btnAnalyzePK.Size = new System.Drawing.Size(128, 23);
             btnAnalyzePK.TabIndex = 1;
-            btnAnalyzePK.Text = "🔍 Analysér PK Unikhed";
+            btnAnalyzePK.Text = "Analysér PK Unikhed";
             btnAnalyzePK.UseVisualStyleBackColor = true;
             btnAnalyzePK.Click += btnAnalyzePK_Click;
             // 
