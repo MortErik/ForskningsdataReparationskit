@@ -1,16 +1,14 @@
-# TestvaerkstedetToolkit — Udviklerhåndbog
+# ForskningsdataReparationskit — Udviklerhåndbog
 
 ## Hvad er projektet?
-TestvaerkstedetToolkit er et Windows desktop-program skrevet i C# (.NET 8, Windows Forms), der hjælper med at transformere og kvalitetssikre arkivdata i XML- og CSV-format. 
-Programmet er målrettet til behandling af afleveringspakker (FD) og arkiveringsversioner (AVID) ift. Bekendtgørelse nr. 128.
+ForskningsdataReparationskit er et Windows desktop-program skrevet i C# (.NET 8, Windows Forms). Programmet er målrettet til behandling af afleveringspakker (FD) og arkiveringsversioner (AVID) ift. Bekendtgørelse nr. 128.
 
-Programmet indeholder fire specialiserede værktøjer:
+Programmet indeholder fire værktøjer:
 
-Værktøj	Beskrivelse
+Værktøj	Beskrivelse:
 - XML Table Splitter	Opdeler store XML-tabeller i mindre deltabeller og opdaterer tableIndex.xml automatisk
 - XML FK Repair	Reparerer referentiel integritet i XML-datasæt (manglende fremmednøgler)
 - CSV FK Repair	Samme som XML FK Repair, men for CSV-filer
-- XML Conversion	Konverterer CSV/tekst-data til XML-format
 
 Alle fire værktøjer tilgås fra et centralt dashboard (WelcomeForm).
 
@@ -26,7 +24,7 @@ Alle fire værktøjer tilgås fra et centralt dashboard (WelcomeForm).
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## Projektstruktur
-TestvaerkstedetToolkit/
+ForskningsdataReparationskit/
 │
 ├── Program.cs
 │
@@ -34,7 +32,6 @@ TestvaerkstedetToolkit/
 ├── XMLTableSplitterForm.cs
 ├── XMLFKRepairForm.cs
 │   └── ScalableXmlFKRepair.cs
-├── XMLConversionForm.cs
 ├── CSVFKRepairForm.cs
 │ 
 ├── Controls/
@@ -102,17 +99,17 @@ Krav
 Byg og kør lokalt
 
 ### Klon projektet
-git clone https://github.com/MortErik/TestvaerkstedetToolkit
-cd TestvaerkstedetToolkit
+git clone https://github.com/MortErik/ForskningsdataReparationskit
+cd ForskningsdataReparationskit
 
 ### Byg
-dotnet build TestvaerkstedetToolkit.sln
+dotnet build ForskningsdataReparationskit.sln
 
 ### Kør (eller åbn .sln i Visual Studio og tryk F5)
-dotnet run --project TestvaerkstedetToolkit/TestvaerkstedetToolkit.csproj
+dotnet run --project ForskningsdataReparationskit/ForskningsdataReparationskit.csproj
 
 Publicer som single-file executable
-dotnet publish TestvaerkstedetToolkit/TestvaerkstedetToolkit.csproj \
+dotnet publish ForskningsdataReparationskit/ForskningsdataReparationskit.csproj \
   -c Release \
   -r win-x64 \
   /p:PublishSingleFile=true \
@@ -165,7 +162,6 @@ Programmet arbejder med arkiveringsversioner og afleveringspakker i overensstemm
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## Kendte begrænsninger og fremtidige forbedringer
-- Ingen automatiserede tests (høj prioritet at tilføje)
-- Ingen CI/CD-pipeline
+- Ingen automatiserede tests
 - Kun Windows (by design — Windows Forms)
 - Koden og kommentarerne er primært på dansk
