@@ -3,7 +3,7 @@
 ## Hvad er projektet?
 ForskningsdataReparationskit er et Windows desktop-program skrevet i C# (.NET 8, Windows Forms). Programmet er målrettet til behandling af afleveringspakker (FD) og arkiveringsversioner (AVID) ift. Bekendtgørelse nr. 128.
 
-Programmet indeholder fire værktøjer:
+Programmet indeholder tre værktøjer:
 
 Værktøj	Beskrivelse:
 - XML Table Splitter	Opdeler store XML-tabeller i mindre deltabeller og opdaterer tableIndex.xml automatisk
