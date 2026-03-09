@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>ForskningsdataReparationskit</RootNamespace>
+    <AssemblyName>ForskningsdataReparationskit</AssemblyName>
+    
+    <!-- Disable nullable warnings initially for easier migration -->
+    <Nullable>disable</Nullable>
+    
+    <!-- Disable implicit usings to keep existing using statements -->
+    <ImplicitUsings>disable</ImplicitUsings>
+    
+    <!-- Keep deterministic builds -->
+    <Deterministic>true</Deterministic>
+    
+    <!-- Auto-generate binding redirects -->
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    
+    <!-- Platform target -->
+    <PlatformTarget>AnyCPU</PlatformTarget>
+	
+	<!-- Single file publish settings -->
+	<PublishSingleFile>true</PublishSingleFile>
+	<SelfContained>true</SelfContained>
+	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+	<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <!-- All .cs files are automatically included with SDK-style projects -->
+  <!-- All .resx files are automatically linked to their corresponding .cs files -->
+  
+  <!-- Explicitly declare embedded resources to maintain dependencies -->
+  <ItemGroup>
+    <EmbeddedResource Update="Controls\CompositePKSelector.resx">
+      <DependentUpon>CompositePKSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="CSVFKRepairForm.resx">
+      <DependentUpon>CSVFKRepairForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="XMLConversionForm.resx">
+      <DependentUpon>XMLConversionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="XMLFKRepairForm.resx">
+      <DependentUpon>XMLFKRepairForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="XMLTableSplitterForm.resx">
+      <DependentUpon>XMLTableSplitterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="WelcomeForm.resx">
+      <DependentUpon>WelcomeForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+</Project>
