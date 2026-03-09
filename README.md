@@ -10,7 +10,7 @@ Værktøj	Beskrivelse:
 - XML FK Repair	Reparerer referentiel integritet i XML-datasæt (manglende fremmednøgler)
 - CSV FK Repair	Samme som XML FK Repair, men for CSV-filer
 
-Alle fire værktøjer tilgås fra et centralt dashboard (WelcomeForm).
+Alle tre værktøjer tilgås fra et centralt dashboard (WelcomeForm).
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
