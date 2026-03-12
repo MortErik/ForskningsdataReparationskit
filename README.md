@@ -24,52 +24,8 @@ Alle tre værktøjer tilgås fra et centralt dashboard (WelcomeForm).
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## Projektstruktur
-ForskningsdataReparationskit/
-│
-├── Program.cs
-│
-├── WelcomeForm.cs
-├── XMLTableSplitterForm.cs
-├── XMLFKRepairForm.cs
-│   └── ScalableXmlFKRepair.cs
-├── CSVFKRepairForm.cs
-│ 
-├── Controls/
-│   └── CompositePKSelector.cs
-│
-├── Services/
-│   ├── XMLSplitService.cs
-│   ├── XMLFileGenerationService.cs
-│   ├── TableIndexService.cs
-│   ├── SplitConfigurationService.cs
-│   ├── PrimaryKeyAnalysisService.cs
-│   ├── CompositePKSplitAlgorithm.cs
-│   └── AutoIDManager.cs
-│
-├── Models/
-│   ├── UIDataContainer.cs
-│   ├── TableIndexEntry.cs
-│   ├── TableIndexColumn.cs
-│   ├── PrimaryKeyInfo.cs
-│   ├── SplitTable.cs
-│   ├── SplitConfiguration.cs
-│   ├── SplitResult.cs
-│   ├── AnalysisResult.cs
-│   ├── ForeignKeyInfo.cs
-│   └── XMLColumn.cs
-│
-├── Utilities/
-│   ├── TableIndexParser.cs
-│   ├── XMLHelper.cs
-│   ├── XMLNamespaceHelper.cs
-│   ├── DataTypeMapper.cs
-│   ├── SplitGenerator.cs
-│   ├── SplitLogger.cs
-│   └── FileSystemHelper.cs
-│
-└── Properties/
-    ├── Settings.Designer.cs
-    └── Resources.Designer.cs
+<img width="1290" height="1330" alt="image" src="https://github.com/user-attachments/assets/9d032326-c95a-4b8b-b9fc-7a3dd58d0818" />
+
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
