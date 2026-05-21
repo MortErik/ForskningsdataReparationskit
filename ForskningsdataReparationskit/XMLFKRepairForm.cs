@@ -746,7 +746,8 @@ namespace ForskningsdataReparationskit
                             outputTableIndexPath,                  // Output (gem til ny fil)
                             currentXmlRepair.ParentTableEntry.Name,
                             missingKeys.Count,
-                            "Integritsfejl"
+                            "Integritsfejl",
+                            integrityDescription
                         );
 
                         tableIndexUpdated = true;
@@ -858,7 +859,8 @@ namespace ForskningsdataReparationskit
             string outputTableIndexPath,
             string tableName,
             int addedRowCount,
-            string integrityColumnName = "Integritsfejl")
+            string integrityColumnName = "Integritsfejl",
+            string integrityDescription = "")
         {
             try
             {
@@ -905,9 +907,7 @@ namespace ForskningsdataReparationskit
                             new XElement(ns + "type", "VARCHAR(50)"),
                             new XElement(ns + "typeOriginal", ""),
                             new XElement(ns + "nullable", "true"),
-                            new XElement(ns + "description",
-                                "Betydning ukendt. Rækken er tilføjet under aflevering til arkiv, " +
-                                "for at sikre referentiel integritet i databasen af hensyn til langtidsbevaring")
+                            new XElement(ns + "description", integrityDescription)
                         );
 
                         columnsElement.Add(newColumn);
