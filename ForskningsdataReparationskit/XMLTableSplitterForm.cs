@@ -42,6 +42,20 @@ namespace ForskningsdataReparationskit
         private bool splitPointsHasPlaceholder = true;
         private const string PLACEHOLDER_TEXT = "Eksempel: 950, 1800, 2700 (eller lad stå tom for automatisk split)";
 
+        private bool _splitCalculated = false;
+
+        private enum WorkflowStep
+        {
+            None = 0,
+            TableIndexLoaded = 1,
+            TableSelected = 2,
+            PKConfigured = 3,
+            SplitCalculated = 4,
+            PKAnalyzed = 5,
+        }
+
+        private WorkflowStep _completedStep = WorkflowStep.None;
+
         #endregion
 
         #region Constructor
@@ -57,6 +71,8 @@ namespace ForskningsdataReparationskit
 
             // Tilføj Load event handler
             this.Load += XMLTableSplitterForm_Load;
+
+            UpdateStepButtons();
         }
 
         /// <summary>
@@ -77,27 +93,24 @@ namespace ForskningsdataReparationskit
         /// </summary>
         private void CompositePKSelector_PrimaryKeyChanged(object sender, EventArgs e)
         {
-            if (compositePKSelector.IsValid())
+            if (compositePKSelector.IsValid() && _completedStep >= WorkflowStep.TableSelected)
             {
-                // Update preview og enable knapper
-                //UpdateSplitPreview();
-                btnCalculateSplit.Enabled = true;
-                btnAnalyzePK.Enabled = true;  // Enable PK analyse når PK er valgt
-
-                // Log PK konfiguration til debug
-                var pkInfo = compositePKSelector.GetPrimaryKeyInfo();
-                var pkColumns = pkInfo.GetAllPrimaryKeyColumns();
-                System.Diagnostics.Debug.WriteLine($"PK Changed: {string.Join(", ", pkColumns)} (Composite: {pkInfo.IsComposite})");
+                if (_completedStep > WorkflowStep.PKConfigured)
+                {
+                    // PK ændret efter split var beregnet — nulstil splitdata
+                    ResetSplitState();
+                }
+                _completedStep = WorkflowStep.PKConfigured;
             }
-            else
+            else if (!compositePKSelector.IsValid() && _completedStep >= WorkflowStep.PKConfigured)
             {
-                // Disable knapper og vis fejl
-                btnExecuteSplit.Enabled = false;
-                btnExecuteSplit.Enabled = false;
-                btnAnalyzePK.Enabled = false;
+                ResetSplitState();
+                _completedStep = WorkflowStep.TableSelected;
                 lblPreviewInfo.Text = compositePKSelector.GetValidationError();
                 lblPreviewInfo.ForeColor = Color.DarkRed;
             }
+
+            UpdateStepButtons();
         }
 
         #endregion
@@ -120,6 +133,9 @@ namespace ForskningsdataReparationskit
                     {
                         currentTableIndexPath = openDialog.FileName;
                         txtTableIndexPath.Text = currentTableIndexPath;
+
+                        _completedStep = WorkflowStep.TableIndexLoaded;
+                        UpdateStepButtons();
 
                         // Parse tableIndex.xml og load tilgængelige tabeller
                         LoadTableIndexMetadata();
@@ -178,6 +194,12 @@ namespace ForskningsdataReparationskit
             try
             {
                 currentTableEntry = availableTables[cmbTableSelector.SelectedIndex];
+
+                //Sæt trin og ryd splitdata - ALTID når tabel skiftes
+                _completedStep = WorkflowStep.TableSelected;
+                ResetSplitState();
+                UpdateStepButtons();
+
                 PopulateColumnOverview();
                 compositePKSelector.LoadTableData(currentTableEntry);
 
@@ -357,7 +379,13 @@ namespace ForskningsdataReparationskit
                     splitPoints, currentTableEntry, allColumns, pkInfo);
 
                 ShowTableIndexSplitPreview();
-                btnExecuteSplit.Enabled = resultTables.Count >= 2;
+
+                if (resultTables.Count >= 2)
+                {
+                    _splitCalculated = true;
+                    _completedStep = WorkflowStep.SplitCalculated;
+                    UpdateStepButtons();
+                }
             }
             catch (Exception ex)
             {
@@ -426,6 +454,8 @@ namespace ForskningsdataReparationskit
                 MessageBox.Show("AutoID genereres automatisk under split og er garanteret unik.\n\n" +
                                "Analyse er ikke nødvendig - du kan fortsætte direkte til split.",
                                "Auto-genereret Primærnøgle", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                _completedStep = WorkflowStep.PKAnalyzed;
+                UpdateStepButtons();
                 return;
             }
 
@@ -475,6 +505,9 @@ namespace ForskningsdataReparationskit
 
                 string message = pkAnalysisService.BuildPKAnalysisMessage(pkColumns, analysisResult.UniqueCount, analysisResult.TotalCount, analysisResult.NullCount);
                 ShowPKAnalysisResult(message, analysisResult.UniqueCount, analysisResult.TotalCount, analysisResult.NullCount);
+                _completedStep = WorkflowStep.PKAnalyzed;
+                UpdateStepButtons();
+
             }
             catch (Exception ex)
             {
@@ -484,7 +517,9 @@ namespace ForskningsdataReparationskit
             }
             finally
             {
-                btnAnalyzePK.Enabled = true;
+                UpdateStepButtons();
+                progressBar.Visible = false;
+                progressBar.Value = 0;
             }
         }
 
@@ -801,8 +836,7 @@ namespace ForskningsdataReparationskit
         {
             bool hasStructure = allColumns.Count > 0;
 
-            txtSplitPoints.Enabled = hasStructure;
-            btnCalculateSplit.Enabled = hasStructure;
+            UpdateStepButtons();
         }
 
         /// <summary>
@@ -810,6 +844,8 @@ namespace ForskningsdataReparationskit
         /// </summary>
         private void ResetUIToInitialState()
         {
+            _completedStep = WorkflowStep.None;
+
             txtSourceXML.Text = "";
             lstSplitPreview.Items.Clear();
 
@@ -825,8 +861,7 @@ namespace ForskningsdataReparationskit
             allColumns.Clear();
             resultTables.Clear();
 
-            btnExecuteSplit.Enabled = false;
-            btnAnalyzePK.Enabled = false;
+            UpdateStepButtons();
         }
 
         private void AddSplitPointsInfoLabel()
@@ -913,6 +948,26 @@ namespace ForskningsdataReparationskit
         private bool IsSplitPointsEmpty()
         {
             return splitPointsHasPlaceholder || string.IsNullOrWhiteSpace(txtSplitPoints.Text);
+        }
+
+        private void UpdateStepButtons()
+        {
+            cmbTableSelector.Enabled = _completedStep >= WorkflowStep.TableIndexLoaded;
+            compositePKSelector.Enabled = _completedStep >= WorkflowStep.TableSelected;
+            txtSplitPoints.Enabled = _completedStep >= WorkflowStep.PKConfigured;
+            btnCalculateSplit.Enabled = _completedStep >= WorkflowStep.PKConfigured;
+            btnAnalyzePK.Enabled = _completedStep >= WorkflowStep.PKConfigured;
+            btnExecuteSplit.Enabled = _splitCalculated && _completedStep >= WorkflowStep.PKAnalyzed;
+        }
+
+        private void ResetSplitState()
+        {
+            ShowPlaceholder();
+            lstSplitPreview.Items.Clear();
+            resultTables.Clear();
+            lblPreviewInfo.Text = "Angiv splitpunkter og klik 'Beregn Split'...";
+            lblPreviewInfo.ForeColor = Color.DarkGray;
+            _splitCalculated = false;
         }
 
         #endregion
