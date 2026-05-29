@@ -51,7 +51,6 @@ namespace ForskningsdataReparationskit
             TableSelected = 2,
             PKConfigured = 3,
             SplitCalculated = 4,
-            PKAnalyzed = 5,
         }
 
         private WorkflowStep _completedStep = WorkflowStep.None;
@@ -454,7 +453,6 @@ namespace ForskningsdataReparationskit
                 MessageBox.Show("AutoID genereres automatisk under split og er garanteret unik.\n\n" +
                                "Analyse er ikke nødvendig - du kan fortsætte direkte til split.",
                                "Auto-genereret Primærnøgle", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                _completedStep = WorkflowStep.PKAnalyzed;
                 UpdateStepButtons();
                 return;
             }
@@ -505,7 +503,6 @@ namespace ForskningsdataReparationskit
 
                 string message = pkAnalysisService.BuildPKAnalysisMessage(pkColumns, analysisResult.UniqueCount, analysisResult.TotalCount, analysisResult.NullCount);
                 ShowPKAnalysisResult(message, analysisResult.UniqueCount, analysisResult.TotalCount, analysisResult.NullCount);
-                _completedStep = WorkflowStep.PKAnalyzed;
                 UpdateStepButtons();
 
             }
@@ -957,7 +954,7 @@ namespace ForskningsdataReparationskit
             txtSplitPoints.Enabled = _completedStep >= WorkflowStep.PKConfigured;
             btnCalculateSplit.Enabled = _completedStep >= WorkflowStep.PKConfigured;
             btnAnalyzePK.Enabled = _completedStep >= WorkflowStep.PKConfigured;
-            btnExecuteSplit.Enabled = _splitCalculated && _completedStep >= WorkflowStep.PKAnalyzed;
+            btnExecuteSplit.Enabled = _splitCalculated && _completedStep >= WorkflowStep.SplitCalculated;
         }
 
         private void ResetSplitState()
@@ -968,6 +965,8 @@ namespace ForskningsdataReparationskit
             lblPreviewInfo.Text = "Angiv splitpunkter og klik 'Beregn Split'...";
             lblPreviewInfo.ForeColor = Color.DarkGray;
             _splitCalculated = false;
+            if (_completedStep > WorkflowStep.PKConfigured)
+                _completedStep = WorkflowStep.PKConfigured;
         }
 
         #endregion
