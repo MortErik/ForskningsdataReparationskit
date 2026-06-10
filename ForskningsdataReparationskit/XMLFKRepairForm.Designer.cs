@@ -327,7 +327,7 @@ namespace ForskningsdataReparationskit
             lblIntegrityDesc.Name = "lblIntegrityDesc";
             lblIntegrityDesc.Size = new Size(111, 15);
             lblIntegrityDesc.TabIndex = 0;
-            lblIntegrityDesc.Text = "Kolonnebeskrivelse:";
+            lblIntegrityDesc.Text = "Celleværdi i datafilen:";
             // 
             // txtIntegrityDesc
             // 
@@ -370,7 +370,7 @@ namespace ForskningsdataReparationskit
             lblTableIndexInfo.Name = "lblTableIndexInfo";
             lblTableIndexInfo.Size = new Size(800, 30);
             lblTableIndexInfo.TabIndex = 3;
-            lblTableIndexInfo.Text = "💡 TableIndex giver bedre kolonnenavne, datatyper og beskrivelser.\nKan springes over - programmet parser direkte fra XML.";
+            lblTableIndexInfo.Text = "TableIndex giver bedre kolonnenavne, datatyper og beskrivelser.\nKan springes over - programmet parser direkte fra XML.";
             // 
             // lblParentXmlCol
             // 
