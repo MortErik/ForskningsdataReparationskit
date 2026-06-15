@@ -904,7 +904,7 @@ namespace ForskningsdataReparationskit
                         var newColumn = new XElement(ns + "column",
                             new XElement(ns + "name", integrityColumnName),
                             new XElement(ns + "columnID", newColumnID),
-                            new XElement(ns + "type", "VARCHAR(50)"),
+                            new XElement(ns + "type", "VARCHAR(500)"),
                             new XElement(ns + "typeOriginal", ""),
                             new XElement(ns + "nullable", "true"),
                             new XElement(ns + "description", integrityDescription)
