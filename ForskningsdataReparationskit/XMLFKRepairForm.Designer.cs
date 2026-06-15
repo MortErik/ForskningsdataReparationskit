@@ -231,7 +231,7 @@ namespace ForskningsdataReparationskit
             lblXmlCompositeKey.Name = "lblXmlCompositeKey";
             lblXmlCompositeKey.Size = new Size(165, 13);
             lblXmlCompositeKey.TabIndex = 12;
-            lblXmlCompositeKey.Text = "Sammensatte PK (Optional):";
+            lblXmlCompositeKey.Text = "Sammensatte FK (Optional):";
             // 
             // btnAddXmlPrimaryKey
             // 
@@ -325,9 +325,9 @@ namespace ForskningsdataReparationskit
             lblIntegrityDesc.AutoSize = true;
             lblIntegrityDesc.Location = new Point(560, 675);
             lblIntegrityDesc.Name = "lblIntegrityDesc";
-            lblIntegrityDesc.Size = new Size(114, 15);
+            lblIntegrityDesc.Size = new Size(111, 15);
             lblIntegrityDesc.TabIndex = 0;
-            lblIntegrityDesc.Text = "Kolonnebeskrivelse:";
+            lblIntegrityDesc.Text = "Celleværdi i datafilen:";
             // 
             // txtIntegrityDesc
             // 
@@ -370,7 +370,7 @@ namespace ForskningsdataReparationskit
             lblTableIndexInfo.Name = "lblTableIndexInfo";
             lblTableIndexInfo.Size = new Size(800, 30);
             lblTableIndexInfo.TabIndex = 3;
-            lblTableIndexInfo.Text = "💡 TableIndex giver bedre kolonnenavne, datatyper og beskrivelser.\nKan springes over - programmet parser direkte fra XML.";
+            lblTableIndexInfo.Text = "TableIndex giver bedre kolonnenavne, datatyper og beskrivelser.\nKan springes over - programmet parser direkte fra XML.";
             // 
             // lblParentXmlCol
             // 

@@ -28,7 +28,6 @@ namespace ForskningsdataReparationskit
             public string TableIndexPath { get; set; }  // OPTIONAL for metadata
             public List<string> ParentKeyColumns { get; set; } = new List<string>();
             public List<string> ChildKeyColumns { get; set; } = new List<string>();
-            public string IntegrityErrorDescription { get; set; } = "Betydning ukendt. Rækken er tilføjet under aflevering til arkiv, for at sikre referentiel integritet i databasen af hensyn til langtidsbevaring";
 
             // Optional metadata from tableIndex
             public TableIndexEntry ParentTableEntry { get; set; }
@@ -78,6 +77,7 @@ namespace ForskningsdataReparationskit
 
         #region Fields
 
+        private const string IntegrityColumnDescription = "Kolonnen er tilføjet af Rigsarkivet ved aflevering til arkiv af hensyn til langtidsbevaring og indeholder en forklaring på udbedring af referentielle integritetsfejl i databasen.";
         private XmlFKRepair currentXmlRepair = new XmlFKRepair();
         private List<ColumnPair> xmlColumnPairs = new List<ColumnPair>();
         private int nextXmlPairNumber = 2;
@@ -692,7 +692,7 @@ namespace ForskningsdataReparationskit
                 progressBar1.Style = ProgressBarStyle.Continuous;
 
                 var missingKeys = lstXmlMissingValues.Items.Cast<string>().ToList();
-                string integrityDescription = txtIntegrityDesc.Text;
+                string integrityCellValue = txtIntegrityDesc.Text;
 
                 // Saml alle key kolonner
                 var keyColumns = new List<string>();
@@ -725,7 +725,7 @@ namespace ForskningsdataReparationskit
                     outputXmlPath,
                     missingKeys,
                     keyColumns,
-                    integrityDescription,
+                    integrityCellValue,
                     tableEntry,
                     progress,
                     CancellationToken.None
@@ -907,7 +907,7 @@ namespace ForskningsdataReparationskit
                             new XElement(ns + "type", "VARCHAR(500)"),
                             new XElement(ns + "typeOriginal", ""),
                             new XElement(ns + "nullable", "true"),
-                            new XElement(ns + "description", integrityDescription)
+                            new XElement(ns + "description", IntegrityColumnDescription)
                         );
 
                         columnsElement.Add(newColumn);
