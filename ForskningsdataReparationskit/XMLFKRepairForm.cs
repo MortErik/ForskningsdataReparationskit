@@ -746,7 +746,8 @@ namespace ForskningsdataReparationskit
                             outputTableIndexPath,                  // Output (gem til ny fil)
                             currentXmlRepair.ParentTableEntry.Name,
                             missingKeys.Count,
-                            "Integritsfejl"
+                            "Integritsfejl",
+                            integrityDescription
                         );
 
                         tableIndexUpdated = true;
@@ -858,7 +859,8 @@ namespace ForskningsdataReparationskit
             string outputTableIndexPath,
             string tableName,
             int addedRowCount,
-            string integrityColumnName = "Integritsfejl")
+            string integrityColumnName = "Integritsfejl",
+            string integrityDescription = "")
         {
             try
             {

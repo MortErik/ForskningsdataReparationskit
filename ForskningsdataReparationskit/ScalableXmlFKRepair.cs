@@ -278,17 +278,35 @@ namespace ForskningsdataReparationskit
                 };
             }
 
-            // Tilføj integrity error kolonne
-            string newColumnID = $"c{maxColumnNumber + 1}";
-            defaults[newColumnID] = new ColumnDefaultInfo
-            {
-                ColumnName = newColumnID,
-                DefaultValue = integrityDescription,
-                IsNillable = false,
-                DataType = "VARCHAR(500)"
-            };
+            // Tjek om Integritsfejl-kolonnen allerede eksisterer i denne tabel
+            var existingIntegrityColumn = tableEntry.Columns
+                .FirstOrDefault(c => c.Name == "Integritsfejl");
 
-            return defaults;
+            if (existingIntegrityColumn != null)
+            {
+                // Genbrug eksisterende kolonne-ID
+                defaults[existingIntegrityColumn.ColumnID] = new ColumnDefaultInfo
+                {
+                    ColumnName = existingIntegrityColumn.ColumnID,
+                    DefaultValue = integrityDescription,
+                    IsNillable = false,
+                    DataType = "VARCHAR(500)"
+                };
+            }
+            else
+            {
+                // Kolonnen findes ikke — tilføj ny
+                string newColumnID = $"c{maxColumnNumber + 1}";
+                defaults[newColumnID] = new ColumnDefaultInfo
+                {
+                    ColumnName = newColumnID,
+                    DefaultValue = integrityDescription,
+                    IsNillable = false,
+                    DataType = "VARCHAR(500)"
+                };
+            }
+
+        return defaults;
         }
 
         /// <summary>
