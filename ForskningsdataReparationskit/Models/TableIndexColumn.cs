@@ -23,25 +23,5 @@ namespace ForskningsdataReparationskit.Models
         /// Display med alle metadata
         /// </summary>
         public string DisplayText => $"{ColumnID}: {Name} ({DataType}, {(IsNullable ? "nullable" : "not null")})";
-
-        /// <summary>
-        /// Get default værdi baseret på datatype
-        /// Kun PK og date/time kolonner får værdier, resten står tomt
-        /// </summary>
-        public string GetDefaultValue()
-        {
-            switch (DataType?.ToUpper())
-            {
-                case "DATE":
-                    return "9999-12-31";
-                case "TIME":
-                    return "23:59:59";
-                case "TIMESTAMP":
-                    return "9999-12-31T23:59:59";
-                default:
-                    // Alle andre typer (INTEGER, DECIMAL, BOOLEAN, VARCHAR osv) → tom værdi
-                    return "";
-            }
-        }
     }
 }
