@@ -746,8 +746,8 @@ namespace ForskningsdataReparationskit
                             outputTableIndexPath,                  // Output (gem til ny fil)
                             currentXmlRepair.ParentTableEntry.Name,
                             missingKeys.Count,
-                            "Integritsfejl",
-                            integrityDescription
+                            "Integritetsfejl",
+                            integrityCellValue
                         );
 
                         tableIndexUpdated = true;
@@ -785,7 +785,7 @@ namespace ForskningsdataReparationskit
                     {
                         successMessage += "  • tableIndex_updated.xml\n\n";
                         successMessage += "tableIndex ændringer:\n";
-                        successMessage += "  • Tilføjet 'Integritsfejl' kolonne\n";
+                        successMessage += "  • Tilføjet 'Integritetsfejl' kolonne\n";
                         successMessage += $"  • Opdateret antal rækker (+{missingKeys.Count:N0})\n\n";
                     }
                     else
@@ -851,7 +851,7 @@ namespace ForskningsdataReparationskit
         }
 
         /// <summary>
-        /// Opdater tableIndex.xml med ny "Integritsfejl" kolonne og opdateret row count
+        /// Opdater tableIndex.xml med ny "Integritetsfejl" kolonne og opdateret row count
         /// Gemmer til output path (ikke original)
         /// </summary>
         private void UpdateTableIndexAfterRepair(
@@ -859,7 +859,7 @@ namespace ForskningsdataReparationskit
             string outputTableIndexPath,
             string tableName,
             int addedRowCount,
-            string integrityColumnName = "Integritsfejl",
+            string integrityColumnName = "Integritetsfejl",
             string integrityDescription = "")
         {
             try
@@ -878,7 +878,7 @@ namespace ForskningsdataReparationskit
                     throw new InvalidOperationException($"Tabel '{tableName}' ikke fundet i tableIndex.xml");
                 }
 
-                // STEP 1: Tilføj "Integritsfejl" kolonne hvis den ikke findes
+                // STEP 1: Tilføj "Integritetsfejl" kolonne hvis den ikke findes
                 var columnsElement = targetTable.Element(ns + "columns");
                 if (columnsElement != null)
                 {

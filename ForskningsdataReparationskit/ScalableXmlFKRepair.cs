@@ -229,22 +229,26 @@ namespace ForskningsdataReparationskit
 
             // 2. Parse column structure
             Dictionary<string, ColumnDefaultInfo> columnDefaults;
+            string newIntegrityColumnName;
 
             if (tableEntry != null && tableEntry.Columns != null)
             {
                 // Strategy 1: Brug tableIndex metadata (bedst)
-                columnDefaults = BuildColumnDefaultsFromTableIndex(tableEntry, integrityDescription);
+                columnDefaults = BuildColumnDefaultsFromTableIndex(tableEntry, integrityDescription, out newIntegrityColumnName);
             }
             else
             {
                 // Strategy 2: Parse fra XML
                 columnDefaults = BuildColumnDefaultsFromXml(sourceXmlPath, integrityDescription);
+
+                // Ved XML fallback (ingen tableIndex) kan gentagne kørsler resultere i dublerede integrity-kolonner.
+                newIntegrityColumnName = columnDefaults.Keys.OrderByDescending(k => ExtractColumnNumber(k)).First();
             }
 
             // 3. Generate repaired XML
             await GenerateXmlWithMissingRowsAsync(
                 sourceXmlPath, outputXmlPath, missingKeys, keyColumns,
-                integrityDescription, columnDefaults, progress, cancellationToken);
+                integrityDescription, columnDefaults, newIntegrityColumnName, progress, cancellationToken);
         }
 
         /// <summary>
@@ -262,7 +266,7 @@ namespace ForskningsdataReparationskit
         /// Build column defaults fra TableIndex metadata
         /// </summary>
         private Dictionary<string, ColumnDefaultInfo> BuildColumnDefaultsFromTableIndex(
-            TableIndexEntry tableEntry, string integrityDescription)
+            TableIndexEntry tableEntry, string integrityDescription, out string newIntegrityColumnName)
         {
             var defaults = new Dictionary<string, ColumnDefaultInfo>();
             int maxColumnNumber = tableEntry.Columns.Max(c => ExtractColumnNumber(c.ColumnID));
@@ -272,7 +276,7 @@ namespace ForskningsdataReparationskit
                 defaults[column.ColumnID] = new ColumnDefaultInfo
                 {
                     ColumnName = column.ColumnID,
-                    DefaultValue = column.GetDefaultValue(),  // Bruger TableIndexColumn metode
+                    DefaultValue = null,
                     IsNillable = column.IsNullable,
                     DataType = column.DataType
                 };
@@ -280,11 +284,12 @@ namespace ForskningsdataReparationskit
 
             // Tjek om Integritsfejl-kolonnen allerede eksisterer i denne tabel
             var existingIntegrityColumn = tableEntry.Columns
-                .FirstOrDefault(c => c.Name == "Integritsfejl");
+                .FirstOrDefault(c => c.Name == "Integritetsfejl");
 
             if (existingIntegrityColumn != null)
             {
                 // Genbrug eksisterende kolonne-ID
+                newIntegrityColumnName = null;
                 defaults[existingIntegrityColumn.ColumnID] = new ColumnDefaultInfo
                 {
                     ColumnName = existingIntegrityColumn.ColumnID,
@@ -297,6 +302,7 @@ namespace ForskningsdataReparationskit
             {
                 // Kolonnen findes ikke — tilføj ny
                 string newColumnID = $"c{maxColumnNumber + 1}";
+                newIntegrityColumnName = newColumnID;
                 defaults[newColumnID] = new ColumnDefaultInfo
                 {
                     ColumnName = newColumnID,
@@ -306,7 +312,7 @@ namespace ForskningsdataReparationskit
                 };
             }
 
-        return defaults;
+            return defaults;
         }
 
         /// <summary>
@@ -348,7 +354,7 @@ namespace ForskningsdataReparationskit
                                 defaults[columnName] = new ColumnDefaultInfo
                                 {
                                     ColumnName = columnName,
-                                    DefaultValue = GetIntelligentDefault(columnName, isNillable),
+                                    DefaultValue = null,
                                     IsNillable = isNillable,
                                     DataType = "UNKNOWN"  // Kan ikke bestemmes fra XML
                                 };
@@ -373,22 +379,6 @@ namespace ForskningsdataReparationskit
         }
 
         /// <summary>
-        /// Intelligent default value gætværk uden metadata
-        /// </summary>
-        private string GetIntelligentDefault(string columnName, bool isNillable)
-        {
-            if (isNillable) return null;  // Will generate xsi:nil="true"
-
-            // Column position-based heuristics (simple fallback)
-            int colNumber = ExtractColumnNumber(columnName);
-
-            if (colNumber <= 3) return "0";       // Ofte IDs/keys
-            if (colNumber >= 15) return "";       // Ofte text felter
-
-            return "0.0";  // Default numeric
-        }
-
-        /// <summary>
         /// Extract column number fra "c1", "c2" etc.
         /// </summary>
         private int ExtractColumnNumber(string columnID)
@@ -405,12 +395,15 @@ namespace ForskningsdataReparationskit
         /// <summary>
         /// Generate XML with missing rows
         /// </summary>
-        private async Task GenerateXmlWithMissingRowsAsync(string sourceXmlPath, string outputXmlPath, List<string> missingKeys, List<string> keyColumns, string integrityDescription, 
-            Dictionary<string, ColumnDefaultInfo> columnDefaults, IProgress<(long processed, string stage)> progress, CancellationToken cancellationToken)
+        private async Task GenerateXmlWithMissingRowsAsync(
+            string sourceXmlPath, string outputXmlPath,
+            List<string> missingKeys, List<string> keyColumns,
+            string integrityDescription,
+            Dictionary<string, ColumnDefaultInfo> columnDefaults,
+            string newIntegrityColumnName,
+            IProgress<(long processed, string stage)> progress,
+            CancellationToken cancellationToken)
         {
-            // Find den nye kolonne (c10, c11, etc.)
-            var newColumnName = columnDefaults.Keys.OrderByDescending(k => ExtractColumnNumber(k)).First();
-
             using (var reader = new StreamReader(sourceXmlPath, Encoding.UTF8, true, BUFFER_SIZE))
             using (var writer = new StreamWriter(outputXmlPath, false, Encoding.UTF8, BUFFER_SIZE))
             {
@@ -429,13 +422,16 @@ namespace ForskningsdataReparationskit
                         continue;
                     }
 
-                    // Detect end af row - INDSÆT ny kolonne FØR </row>
+                    // Detect end af row</row>
                     if (inRow && (trimmedLine.Trim() == "</row>"))
                     {
-                        // Tilføj den nye kolonne til eksisterende række - TOM (ikke nil)
-                        string indentation = "    "; // Match eksisterende indentation
-                        await writer.WriteLineAsync($"{indentation}<{newColumnName}></{newColumnName}>");
-                
+                        // Kun tilføj kolonnen til eksisterende rækker hvis den er helt ny
+                        if (newIntegrityColumnName != null)
+                        {
+                            string indentation = "    "; // Match eksisterende indentation
+                            await writer.WriteLineAsync($"{indentation}<{newIntegrityColumnName} xsi:nil=\"true\"/>");
+                        }
+
                         // Skriv </row>
                         await writer.WriteLineAsync(line);
                         inRow = false;
@@ -503,15 +499,13 @@ namespace ForskningsdataReparationskit
                         string escaped = SecurityElement.Escape(keyValue);
                         await writer.WriteLineAsync($"    <{columnName}>{escaped}</{columnName}>");
                     }
-                    else if (info.IsNillable && info.DefaultValue == null)
+                    else if (string.IsNullOrEmpty(info.DefaultValue))
                     {
-                        // NULLABLE
                         await writer.WriteLineAsync($"    <{columnName} xsi:nil=\"true\"/>");
                     }
                     else
                     {
-                        // DEFAULT
-                        string escaped = SecurityElement.Escape(info.DefaultValue ?? "");
+                        string escaped = SecurityElement.Escape(info.DefaultValue);
                         await writer.WriteLineAsync($"    <{columnName}>{escaped}</{columnName}>");
                     }
                 }
